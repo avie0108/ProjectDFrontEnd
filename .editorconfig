@@ -1,0 +1,19 @@
+root = true
+
+[dist/*]
+end_of_line = lf
+insert_final_newline = false
+indent_size = 1
+indent_style = space
+
+[src/*]
+end_of_line = crlf
+insert_final_newline = true
+charset = utf-8
+indent_size = 4
+indent_style = tab
+spaces_around_operators = true
+indent_brace_style = Allman
+
+[src/**.{json,js,tsx,ts}]
+curly_bracket_next_line = true

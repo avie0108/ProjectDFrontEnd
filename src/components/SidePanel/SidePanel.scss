@@ -1,0 +1,50 @@
+@import "../BasicValues.scss";
+
+.sidenav{
+	height: 100%;
+	width: $basesize;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: hsl($basehue,$basesaturation, percentage($baselighgting / 255));
+	overflow-x: hidden;
+	transition: 0.5s;
+	border-top-right-radius: 30px;
+	border-bottom-right-radius: 30px;
+	color: white;
+}
+
+.sidenav button{
+	height: 60px;
+	width: 60px;
+	margin: 10px;
+	border: none;
+	border-radius: 30px;
+	transition: 0.5s;
+	padding: 0;
+	outline: none;
+	color: white;
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2)/ 255));
+}
+
+.sidenav button>img{
+	height: 60px;
+	width: 60px;
+	transition: 0.3s;
+	border: none;
+	border-radius: 30px;
+}
+
+.sidenav button:hover, .sidenav button>img:hover{
+	transition: 0.3s;
+	border-radius: 15px;
+}
+
+.sidenav>hr{
+	border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting * 3)/ 255));
+	border-radius: 20px;
+	width: $basesize - 10;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}

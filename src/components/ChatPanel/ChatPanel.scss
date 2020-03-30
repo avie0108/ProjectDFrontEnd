@@ -1,0 +1,64 @@
+@import "../BasicValues.scss";
+
+body{
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.chatpanel{
+	color: #ffffff;
+	font-family: "Open Sans";
+	height: 100vh;
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
+}
+
+.chattop{
+	padding-left: $sidepanelsize;
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
+	height: $basesize;
+}
+
+.chattop>h1{
+	text-align: center;
+	font-size: 40pt;
+	width: fit-content;
+	margin: 0;
+}
+
+.chat{
+	height: calc(100vh - #{$basesize * 2});
+	width: 100vw;
+	padding-left: $sidepanelsize;
+}
+
+.messages{
+	height: 100%;
+	padding: 10px;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: flex-start;
+	overflow-y: auto;
+}
+
+.messages>div.message{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	margin-bottom: 10px;
+}
+
+.message>div.avatar-container{
+	margin-right: 10px;
+}
+
+.message>div.avatar-container>img{
+	width: 60px;
+	height: 60px;
+}
+
+.message>div.text-container>div.name{
+	font-weight: bold;
+	font-size: 14pt;
+	color: #00bf00ff;
+}

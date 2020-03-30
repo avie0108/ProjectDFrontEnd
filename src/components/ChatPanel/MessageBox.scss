@@ -1,0 +1,32 @@
+@import "../BasicValues.scss";
+
+.messagebox {
+	margin-left: $sidepanelsize;
+}
+
+.messagebox>input{
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
+	border: none;
+	color: white;
+	height: 50px;
+	padding: 10px;
+	outline: none;
+}
+
+.messagebox>input[type=text]{
+	height: 30px;
+	width: calc(100vw - #{$basesize * 1.5 + 10 * 4});
+	font-size: 13pt;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+}
+
+.messagebox>input[type=button]{
+	margin: 0;
+	font-family: "FontAwesome";
+	font-size: 20pt;
+	padding-left: 5px;
+	width: $basesize / 2;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+}
