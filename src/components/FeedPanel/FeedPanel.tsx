@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import FeedItem from './FeedItem';
 import './FeedPanel.scss';
 
-class FeedPanel extends React.Component {
+// The feed panel is a container for feed items
+export class FeedPanel extends React.Component {
     // Add feed items to the panel
     getFeedItems() {
         let rows = [];
@@ -36,7 +37,3 @@ class FeedPanel extends React.Component {
         );
     }
 }
-
-ReactDOM.render(<FeedPanel />, document.getElementById('root'));
-
-export default FeedPanel;

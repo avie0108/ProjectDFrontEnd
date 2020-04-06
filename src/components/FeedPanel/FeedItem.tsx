@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './FeedItem.scss';
 
-class FeedItem extends React.Component {
+// Feed items are posts a user can make
+// It contains a title, a description and optionally a picture
+export class FeedItem extends React.Component {
   render() {
     return (
       <div className="feed-item">
@@ -18,7 +20,3 @@ class FeedItem extends React.Component {
     );
   }
 }
-
-ReactDOM.render(<FeedItem />, document.getElementById('root'));
-
-export default FeedItem;
