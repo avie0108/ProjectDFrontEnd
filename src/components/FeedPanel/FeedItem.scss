@@ -1,6 +1,8 @@
+@import "./../BasicValues.scss";
+
 .feed-item {
-    background-color: #DDDDDD;
-    border: 1px solid #444444;
+    background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
+    border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
     box-sizing: border-box;
     border-radius: 15px;
     padding: 10px;
