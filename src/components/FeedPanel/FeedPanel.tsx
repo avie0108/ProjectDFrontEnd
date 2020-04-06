@@ -4,9 +4,11 @@ import FeedItem from './FeedItem';
 import './FeedPanel.scss';
 
 class FeedPanel extends React.Component {
+    // Add feed items to the panel
     getFeedItems() {
         let rows = [];
 
+        // For now we add 8 feed items to the panel
         for (let i = 0; i < 8; i++) {
             rows.push(<FeedItem />);
         }
