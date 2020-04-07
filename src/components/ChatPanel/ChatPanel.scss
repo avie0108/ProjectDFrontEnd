@@ -8,7 +8,7 @@ body{
 
 .chatpanel{
 	color: #ffffff;
-	font-family: "Open Sans";
+	font-family: $basefont;
 	height: 100vh;
 	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
 }

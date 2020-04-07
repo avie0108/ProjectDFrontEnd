@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import FeedItem from './FeedItem';
+import { FeedItem } from './FeedItem';
 import './FeedPanel.scss';
 
 // The feed panel is a container for feed items

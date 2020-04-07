@@ -21,6 +21,9 @@
 	border-bottom-left-radius: 20px;
 }
 
+.messagebox>input[type=text]::placeholder{
+	color: #eee;
+}
 .messagebox>input[type=button]{
 	margin: 0;
 	font-family: "FontAwesome";

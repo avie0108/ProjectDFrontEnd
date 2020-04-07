@@ -7,7 +7,7 @@ export interface SidePanelProps
 {
 	// the function that is called when one of the buttons is pressed
 	// @param id: the id of the chat button that is pressed
-	CallBack(id: Number): void;
+	CallBack(id: Number | "Feed"): void;
 }
 
 // the side panel
@@ -17,7 +17,7 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 	{
 		return <div className="sidenav">
 			{/* the button for the feed with default id 0*/}
-			<button onClick={() => this.props.CallBack(0)}>
+			<button onClick={() => this.props.CallBack("Feed")}>
 				<FontAwesomeIcon icon={faHome} size="2x"/>
 			</button>
 			<hr/>
