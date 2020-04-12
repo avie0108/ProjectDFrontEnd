@@ -3,8 +3,16 @@ import { FeedItem } from "./FeedItem";
 import "./FeedPanel.scss";
 
 // The feed panel is a container for feed items
-export class FeedPanel extends React.Component {
-  state = { titel: "", tekstveld: "" };
+export class FeedPanel extends React.Component<{}, {}> {
+  InputRef: React.RefObject<HTMLInputElement>;
+  TextRef: React.RefObject<HTMLTextAreaElement>;
+
+  constructor(props: {}) {
+    super(props);
+
+    this.InputRef = React.createRef<HTMLInputElement>();
+    this.TextRef = React.createRef<HTMLTextAreaElement>();
+  }
 
   // Add feed items to the panel
   getFeedItems() {
@@ -28,38 +36,31 @@ export class FeedPanel extends React.Component {
         </div>
         <div className="feed-form">
           <h2>Feed Item aanmaken</h2>
-          <form action="#">
+          <form action="#" onSubmit={() => this.handleFormSubmit()}>
             <input
               type="text"
               className="form-element"
               placeholder="Titel"
               id="Titel"
-              onChange={this.handleForm}
+              ref={this.InputRef}
             ></input>
             <br />
             <textarea
               className="form-element"
               placeholder="Typ uw bericht"
               id="Tekstveld"
-              onChange={this.handleForm}
+              ref={this.TextRef}
             ></textarea>
             <br />
 
             <input type="submit" id="feed-form-submit" value="Aanmaken"></input>
           </form>
-          <span>{this.state.titel}</span>
-          <span>{this.state.tekstveld}</span>
         </div>
       </div>
     );
   }
-  handleForm = (event: any) => {
-    if (event.target.id === "Titel") {
-      this.setState({ titel: event.target.value });
-    }
-    if (event.target.id === "Tekstveld") {
-      this.setState({ tekstveld: event.target.value });
-    }
-  };
-  handleFormSubmit = (event: any)
+
+  handleFormSubmit () {
+    console.log(this.InputRef.current?.value + ", " + this.TextRef.current?.value);
+  }
 }
