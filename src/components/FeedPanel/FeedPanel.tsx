@@ -60,7 +60,17 @@ export class FeedPanel extends React.Component<{}, {}> {
     );
   }
 
-  handleFormSubmit () {
-    console.log(this.InputRef.current?.value + ", " + this.TextRef.current?.value);
+  handleFormSubmit() {
+    var xhttp: XMLHttpRequest = new XMLHttpRequest();
+    xhttp.open("post", "localhost:3001/endpoint", true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    
+    var json: string = JSON.stringify({
+      Titel: this.InputRef.current?.value,
+      Beschrijving: this.TextRef.current?.value,
+    });
+    
+    xhttp.send(json);
+
   }
 }
