@@ -1,0 +1,31 @@
+@import "../BasicValues.scss";
+
+.pop-up-bg{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	z-index: 2;
+	background-color: rgba($color: #000000, $alpha: .5);
+	color: white;
+}
+
+.pop-up-div{
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.pop-up-bg>.pop-up-div>h1{
+	margin-top: 0;
+}
+
+.pop-up-bg>.pop-up-div>h1>button{
+	float: right;
+	border: none;
+	background: none;
+	color: white;
+	font-size: inherit;
+}
