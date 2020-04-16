@@ -6,12 +6,14 @@ import "./FeedPanel.scss";
 export class FeedPanel extends React.Component<{}, {}> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
+  CategorieRef: React.RefObject<HTMLInputElement>;
 
   constructor(props: {}) {
     super(props);
-
+    //Creates a react reference for each feed item field in the form using this reference we can get the elements values
     this.InputRef = React.createRef<HTMLInputElement>();
     this.TextRef = React.createRef<HTMLTextAreaElement>();
+    this.CategorieRef = React.createRef<HTMLInputElement>();
   }
 
   // Add feed items to the panel
@@ -52,6 +54,19 @@ export class FeedPanel extends React.Component<{}, {}> {
               ref={this.TextRef}
             ></textarea>
             <br />
+            {/* this is for the form  */}
+            <input 
+              id="categorie"
+              type="text" 
+              list="datalist" 
+              placeholder="Selecteer een categorie" 
+              className="form-element"
+              ref={this.CategorieRef}/>
+              <datalist id="datalist">
+	              <option>Algemene mededeling</option>
+	              <option>Notule</option>
+	              <option>Persoonlijk</option>
+              </datalist>
 
             <input type="submit" id="feed-form-submit" value="Aanmaken"></input>
           </form>
@@ -60,6 +75,7 @@ export class FeedPanel extends React.Component<{}, {}> {
     );
   }
 
+  //sends formdata in JSON to the server server
   handleFormSubmit() {
     var xhttp: XMLHttpRequest = new XMLHttpRequest();
     xhttp.open("post", "localhost:3001/endpoint", true);
@@ -68,8 +84,9 @@ export class FeedPanel extends React.Component<{}, {}> {
     var json: string = JSON.stringify({
       Titel: this.InputRef.current?.value,
       Beschrijving: this.TextRef.current?.value,
+      Categorie: this.CategorieRef.current?.value,
     });
-    
+    console.log(json);
     xhttp.send(json);
 
   }
