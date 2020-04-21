@@ -1,6 +1,7 @@
 import React from "react";
 import { FeedItem } from "./FeedItem";
 import "./FeedPanel.scss";
+import { sendAsJSON } from "../../ajax"
 
 // The feed panel is a container for feed items
 export class FeedPanel extends React.Component<{}, {}> {
@@ -37,7 +38,11 @@ export class FeedPanel extends React.Component<{}, {}> {
         </div>
         <div className="feed-form">
           <h2>Feed Item aanmaken</h2>
-          <form action="#" onSubmit={() => this.handleFormSubmit()}>
+          <form action="#" onSubmit={() => sendAsJSON({
+      title: this.InputRef.current?.value,
+      description: this.TextRef.current?.value,
+      category: this.CategorieRef.current?.value,
+    }, "/api/feedItem")}>
             <input
               type="text"
               className="form-element"
@@ -73,20 +78,5 @@ export class FeedPanel extends React.Component<{}, {}> {
         </div>
       </div>
     );
-  }
-
-  //sends formdata in JSON to the server server
-  handleFormSubmit() {
-    var xhttp: XMLHttpRequest = new XMLHttpRequest();
-    xhttp.open("post", "/api/feedItem", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-
-    var json: string = JSON.stringify({
-      title: this.InputRef.current?.value,
-      description: this.TextRef.current?.value,
-      category: this.CategorieRef.current?.value,
-    });
-    console.log(json);
-    xhttp.send(json);
   }
 }
