@@ -33,7 +33,6 @@ export class FeedPanel extends React.Component<{}, {}> {
       <div className="feed-panel">
         <div className="feed-items">
           <h2>Feed Items</h2>
-          <h3>this.state.test</h3>
           {this.getFeedItems()}
         </div>
         <div className="feed-form">
