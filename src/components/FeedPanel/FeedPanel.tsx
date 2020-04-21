@@ -43,30 +43,31 @@ export class FeedPanel extends React.Component<{}, {}> {
               type="text"
               className="form-element"
               placeholder="Titel"
-              id="Titel"
+              id="title"
               ref={this.InputRef}
             ></input>
             <br />
             <textarea
               className="form-element"
-              placeholder="Typ uw bericht"
-              id="Tekstveld"
+              placeholder="Type uw bericht"
+              id="textfield"
               ref={this.TextRef}
             ></textarea>
             <br />
             {/* this is for the form  */}
-            <input 
-              id="categorie"
-              type="text" 
-              list="datalist" 
-              placeholder="Selecteer een categorie" 
+            <input
+              id="category"
+              type="text"
+              list="datalist"
+              placeholder="Selecteer een categorie"
               className="form-element"
-              ref={this.CategorieRef}/>
-              <datalist id="datalist">
-	              <option>Algemene mededeling</option>
-	              <option>Notule</option>
-	              <option>Persoonlijk</option>
-              </datalist>
+              ref={this.CategorieRef}
+            />
+            <datalist id="datalist">
+              <option>Algemene mededeling</option>
+              <option>Notule</option>
+              <option>Persoonlijk</option>
+            </datalist>
 
             <input type="submit" id="feed-form-submit" value="Aanmaken"></input>
           </form>
@@ -78,16 +79,15 @@ export class FeedPanel extends React.Component<{}, {}> {
   //sends formdata in JSON to the server server
   handleFormSubmit() {
     var xhttp: XMLHttpRequest = new XMLHttpRequest();
-    xhttp.open("post", "localhost:3001/endpoint", true);
+    xhttp.open("post", "/api/feedItem", true);
     xhttp.setRequestHeader("Content-type", "application/json");
-    
+
     var json: string = JSON.stringify({
-      Titel: this.InputRef.current?.value,
-      Beschrijving: this.TextRef.current?.value,
-      Categorie: this.CategorieRef.current?.value,
+      title: this.InputRef.current?.value,
+      description: this.TextRef.current?.value,
+      category: this.CategorieRef.current?.value,
     });
     console.log(json);
     xhttp.send(json);
-
   }
 }
