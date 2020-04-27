@@ -34,3 +34,14 @@
         height: 100%;
     }
 }
+
+.feed-button {
+    background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
+    border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+    box-sizing: border-box;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px 0px;
+    margin-bottom: 5px;
+    color: white;
+}
