@@ -4,7 +4,7 @@ import "./LoginPanel.scss";
 
 export interface LoginPanelState
 {
-	ErrorMessage: null | "incorrect Email" | "incorrect wachtwoord" | string
+	ErrorMessage: null | string
 }
 
 export class LoginPanel extends React.Component<{}, LoginPanelState>
@@ -47,19 +47,27 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 
 	handleFormSubmit()
 	{
-		var xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "localhost:3001/login", true);
-		xhttp.setRequestHeader("Content-type", "application/json");
-		if(LoginPanel.isEmail(this.EmailRef.current?.value ?? ""))
+		if(!LoginPanel.isEmail(this.EmailRef.current?.value ?? "") && this.EmailRef.current?.value !== "Administrator")
 		{
-			var json: string = JSON.stringify({
-				Email: this.EmailRef.current?.value,
-				Password: this.PasswordRef.current?.value,
-				RememberMe: this.RememberMeRef.current?.checked
-			});
-			console.log(json);
-			xhttp.send(json);
-			if(xhttp.status == 200)
+			this.setState({ErrorMessage: "incorrect Email"});
+			return;
+		}
+		if(this.PasswordRef.current?.value?.trim() === ""){
+			this.setState({ErrorMessage: "leeg Wachtwoord"});
+			return;
+		}
+		var xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("post", "http://localhost/api/login", true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		var json: string = JSON.stringify({
+			Email: this.EmailRef.current?.value,
+			Password: this.PasswordRef.current?.value,
+			RememberMe: this.RememberMeRef.current?.checked
+		});
+		console.log(json);
+		xhttp.onloadend = () => {
+			console.log(xhttp.status);
+			if(xhttp.status == 200 || xhttp.status == 204)
 			{
 				this.PopUpRef.current?.Hide();
 				return;
@@ -72,11 +80,9 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 			{
 				this.setState({ErrorMessage: xhttp.responseText});
 			}
-		}
-		else
-		{
-			this.setState({ErrorMessage: "incorrect Email"});
-		}
+		};
+		xhttp.send(json);
+
 	}
 
 	static isEmail(email: string): boolean{
