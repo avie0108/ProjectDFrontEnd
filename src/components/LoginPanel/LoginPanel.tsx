@@ -2,14 +2,17 @@ import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
 
+// The state of the login panel
 export interface LoginPanelState
 {
-	ErrorMessage: null | "incorrect Email" | "incorrect wachtwoord" | string
+	// the current error
+	ErrorMessage: null | string
 }
 
+// the actual login panel
 export class LoginPanel extends React.Component<{}, LoginPanelState>
 {
-
+	// the references needed for the login
 	PopUpRef: React.RefObject<PopUp>;
 	EmailRef: React.RefObject<HTMLInputElement>;
 	PasswordRef: React.RefObject<HTMLInputElement>;
@@ -25,6 +28,7 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 		this.state = {ErrorMessage:null};
 	}
 
+	// show the login pop-up
 	componentDidMount()
 	{
 		this.PopUpRef.current?.Show();
@@ -45,21 +49,34 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 		</PopUp>
 	}
 
+	// sends the data to the backend
 	handleFormSubmit()
 	{
-		var xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "localhost:3001/login", true);
-		xhttp.setRequestHeader("Content-type", "application/json");
-		if(LoginPanel.isEmail(this.EmailRef.current?.value ?? ""))
+		// client side error checking
+		if(!LoginPanel.isEmail(this.EmailRef.current?.value ?? "") && this.EmailRef.current?.value !== "Administrator")
 		{
-			var json: string = JSON.stringify({
-				Email: this.EmailRef.current?.value,
-				Password: this.PasswordRef.current?.value,
-				RememberMe: this.RememberMeRef.current?.checked
-			});
-			console.log(json);
-			xhttp.send(json);
-			if(xhttp.status == 200)
+			this.setState({ErrorMessage: "incorrect Email"});
+			return;
+		}
+		if(this.PasswordRef.current?.value?.trim() === ""){
+			this.setState({ErrorMessage: "leeg Wachtwoord"});
+			return;
+		}
+
+		// making the request that will be sent
+		var xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("post", "http://localhost/api/login", true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		var json: string = JSON.stringify({
+			Email: this.EmailRef.current?.value,
+			Password: this.PasswordRef.current?.value,
+			RememberMe: this.RememberMeRef.current?.checked
+		});
+		
+		// handle the response of the request
+		xhttp.onloadend = () => {
+			console.log(xhttp.status);
+			if(xhttp.status == 200 || xhttp.status == 204)
 			{
 				this.PopUpRef.current?.Hide();
 				return;
@@ -72,13 +89,12 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 			{
 				this.setState({ErrorMessage: xhttp.responseText});
 			}
-		}
-		else
-		{
-			this.setState({ErrorMessage: "incorrect Email"});
-		}
+		};
+		// send the request
+		xhttp.send(json);
 	}
 
+	// checks if email is an email
 	static isEmail(email: string): boolean{
 		return new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$").test(email);
 	}
