@@ -36,7 +36,7 @@ export class FeedPanel extends React.Component<{}, {}> {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-        <h2>Feed Items</h2><button onClick = {() =>this.PopupRef.current?.Show()} className= "feed-button">Creeer feed item</button>
+        <h2>Feed Items</h2><button onClick = {() =>this.PopupRef.current?.Show()} className= "feed-button">Creëer feed item</button>
           {this.getFeedItems()}
           
         </div>
@@ -63,6 +63,7 @@ export class FeedPanel extends React.Component<{}, {}> {
                 placeholder="Titel"
                 id="title"
                 ref={this.InputRef}
+                required
               ></input>
               <br />
               <textarea
@@ -80,6 +81,7 @@ export class FeedPanel extends React.Component<{}, {}> {
                 placeholder="Selecteer een categorie"
                 className="form-element"
                 ref={this.CategorieRef}
+
               />
               <datalist id="datalist">
                 <option>Algemene mededeling</option>
@@ -88,6 +90,7 @@ export class FeedPanel extends React.Component<{}, {}> {
               </datalist>
 
               <input
+                onClick = {() =>this.PopupRef.current?.Hide()}
                 type="submit"
                 id="feed-form-submit"
                 value="Aanmaken"
