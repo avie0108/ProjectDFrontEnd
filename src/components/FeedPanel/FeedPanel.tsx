@@ -36,16 +36,22 @@ export class FeedPanel extends React.Component<{}, {}> {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-        <h2>Feed Items</h2><button onClick = {() =>this.PopupRef.current?.Show()} className= "feed-button">Creëer feed item</button>
+          <h2>Feed Items</h2>
+          <button
+            onClick={() => this.PopupRef.current?.Show()}
+            className="feed-button"
+          >
+            Creëer feed item
+          </button>
           {this.getFeedItems()}
-          
         </div>
-        
-        <PopUp ref = {this.PopupRef}>
+
+        <PopUp ref={this.PopupRef}>
           <div className="feed-form">
             <h2>Feed Item aanmaken</h2>
             <form
               action="#"
+              className="feeditem-form"
               onSubmit={() =>
                 sendAsJSON(
                   {
@@ -53,7 +59,7 @@ export class FeedPanel extends React.Component<{}, {}> {
                     description: this.TextRef.current?.value,
                     category: this.CategorieRef.current?.value,
                   },
-                  "/api/feedItem"
+                  "http://192.168.2.19:12002/api/feedItem"
                 )
               }
             >
@@ -71,6 +77,7 @@ export class FeedPanel extends React.Component<{}, {}> {
                 placeholder="Type uw bericht"
                 id="textfield"
                 ref={this.TextRef}
+                required
               ></textarea>
               <br />
               {/* this is for the form  */}
@@ -81,7 +88,7 @@ export class FeedPanel extends React.Component<{}, {}> {
                 placeholder="Selecteer een categorie"
                 className="form-element"
                 ref={this.CategorieRef}
-
+                required
               />
               <datalist id="datalist">
                 <option>Algemene mededeling</option>
@@ -90,9 +97,8 @@ export class FeedPanel extends React.Component<{}, {}> {
               </datalist>
 
               <input
-                onClick = {() =>this.PopupRef.current?.Hide()}
+                // onClick={() => this.PopupRef.current?.Hide()}
                 type="submit"
-                id="feed-form-submit"
                 value="Aanmaken"
               ></input>
             </form>
