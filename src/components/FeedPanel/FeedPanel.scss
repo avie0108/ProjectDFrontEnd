@@ -29,6 +29,8 @@
             border-radius: 10px;
             background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
             border: none;
+            color: white;
+            box-sizing: border-box;
         }
         
         .form-element::placeholder{
@@ -38,7 +40,6 @@
         textarea {
             font-family: $basefont;
             height: 50vh;
-            color: white;
             
         }
         
@@ -46,7 +47,7 @@
             color: white;
             height: 50px;
             font-family: $basefont;
-            font-size: 1em;
+            font-size: 1.2em;
             width: calc(50% - 15px);
             border-radius: 10px;
             background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));

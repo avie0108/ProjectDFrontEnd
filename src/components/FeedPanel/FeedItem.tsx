@@ -10,7 +10,9 @@ export class FeedItem extends React.Component {
         <div className="feed-item-text-container">
           <div className="feed-item-title">Lorem ipsum dolor sit amet et delectus</div>
           <div className="feed-item-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.</div>
-          <div className="feed-item-reply-like-comment">Reply Like Comment</div>
+          <div className="feed-item-reply-like-comment">
+            <a href="/">Reply</a> | <a href="/">Like</a> | <a href="/">Comment</a>
+          </div>
         </div>
         <div className="feed-item-image-container">
           <div className="feed-item-image"></div>

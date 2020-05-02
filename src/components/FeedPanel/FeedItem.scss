@@ -22,8 +22,17 @@
     }
 
     .feed-item-reply-like-comment {
-        font-style: italic;
         font-size: 1.25rem;
+
+        a {
+            font-style: italic;
+            color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
   

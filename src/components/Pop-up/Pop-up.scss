@@ -14,8 +14,9 @@
 
 .pop-up-div{
 	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
-	padding: 10px;
+	padding: 20px;
 	border-radius: 10px;
+	width: 35%;
 }
 
 .pop-up-bg>.pop-up-div>h1{

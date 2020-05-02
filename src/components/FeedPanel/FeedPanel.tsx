@@ -36,7 +36,7 @@ export class FeedPanel extends React.Component<{}, {}> {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-        <h2>Feed Items</h2><button onClick = {() =>this.PopupRef.current?.Show()} className= "feed-button">Creëer feed item</button>
+        <h2>Feed Items</h2><button onClick = {() =>this.PopupRef.current?.Show()} className= "feed-button">Feed Item aanmaken</button>
           {this.getFeedItems()}
           
         </div>
@@ -66,28 +66,23 @@ export class FeedPanel extends React.Component<{}, {}> {
                 required
               ></input>
               <br />
+              <select
+                id="category"
+                placeholder="Selecteer een categorie"
+                className="form-element"
+                ref={() => this.CategorieRef}>
+                    <option disabled selected>Categorie...</option>
+                    <option>Algemene mededeling</option>
+                    <option>Persoonlijk bericht</option>
+                    <option>Notule</option>
+              </select>
+              <br />
               <textarea
                 className="form-element"
-                placeholder="Type uw bericht"
+                placeholder="Typ uw bericht..."
                 id="textfield"
                 ref={this.TextRef}
               ></textarea>
-              <br />
-              {/* this is for the form  */}
-              <input
-                id="category"
-                type="text"
-                list="datalist"
-                placeholder="Selecteer een categorie"
-                className="form-element"
-                ref={this.CategorieRef}
-
-              />
-              <datalist id="datalist">
-                <option>Algemene mededeling</option>
-                <option>Notule</option>
-                <option>Persoonlijk</option>
-              </datalist>
 
               <input
                 onClick = {() =>this.PopupRef.current?.Hide()}
