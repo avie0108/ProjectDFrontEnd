@@ -32,6 +32,18 @@ export class FeedPanel extends React.Component<{}, {}> {
     return rows;
   }
 
+  sentFeedItem(){
+    this.PopupRef.current?.Hide()
+    sendAsJSON(
+      {
+        title: this.InputRef.current?.value,
+        description: this.TextRef.current?.value,
+        category: this.CategorieRef.current?.value,
+      },
+      "http://192.168.2.19:12002/api/feedItem"
+    )
+  }
+
   render() {
     return (
       <div className="feed-panel">
@@ -49,20 +61,6 @@ export class FeedPanel extends React.Component<{}, {}> {
         <PopUp ref={this.PopupRef}>
           <div className="feed-form">
             <h2>Feed Item aanmaken</h2>
-            <form
-              action="#"
-              className="feeditem-form"
-              onSubmit={() =>
-                sendAsJSON(
-                  {
-                    title: this.InputRef.current?.value,
-                    description: this.TextRef.current?.value,
-                    category: this.CategorieRef.current?.value,
-                  },
-                  "http://192.168.2.19:12002/api/feedItem"
-                )
-              }
-            >
               <input
                 type="text"
                 className="form-element"
@@ -97,11 +95,10 @@ export class FeedPanel extends React.Component<{}, {}> {
               </datalist>
 
               <input
-                // onClick={() => this.PopupRef.current?.Hide()}
-                type="submit"
-                value="Aanmaken"
-              ></input>
-            </form>
+                onClick={() => this.sentFeedItem()}
+                type="button"
+                value="Aanmaken"/>
+
           </div>
         </PopUp>
       </div>
