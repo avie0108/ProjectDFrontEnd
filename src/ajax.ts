@@ -7,4 +7,5 @@ export function sendAsJSON(object:{}, endpoint:string){
     var json: string = JSON.stringify(object);
     console.log(json);
     xhttp.send(json);
+    
 }
