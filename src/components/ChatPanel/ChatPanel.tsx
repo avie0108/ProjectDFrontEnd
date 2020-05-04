@@ -1,5 +1,7 @@
 import * as React from "react";
-import {MessageBox} from "./MessageBox"
+import {MessageBox} from "./MessageBox";
+import * as Sockets from "./Sockets/Sockets";
+import { Guid } from "guid-typescript";
 import "./ChatPanel.scss";
 
 let proxyUrl = "https://cors-anywhere.herokuapp.com/";
@@ -7,7 +9,7 @@ let proxyUrl = "https://cors-anywhere.herokuapp.com/";
 export interface ChatPanelProps 
 {
 	// The Id of the chat
-	ChatId: Number;
+	ChatId: Guid;
 }
 
 interface ChatPanelState
@@ -28,6 +30,10 @@ export class ChatPanel extends React.Component<ChatPanelProps, ChatPanelState>
 		then(response => response.json()).
 		// stores the name in the state
 		then(json => this.setState({ Name: json.Name}));
+		Sockets.Init();
+		Sockets.AddOnMessageCallBack((soc, ev) => {
+			console.log(ev.data);
+		});
 	}
 
 	// updates the state when new props are being received
@@ -76,7 +82,7 @@ export class Message
 interface ChatProps
 {
 	// The Id of the chat
-	ChatId: Number;
+	ChatId: Guid;
 }
 
 interface ChatState

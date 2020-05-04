@@ -3,12 +3,13 @@ import * as ReactDom from "react-dom";
 
 import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
-import { FeedPanel } from "./components/FeedPanel/FeedPanel"
+import { FeedPanel } from "./components/FeedPanel/FeedPanel";
+import { Guid } from "guid-typescript";
 
 interface AppState
 {
 	// The currently selected panel if panel is a number that number is then the chat id
-	CurrentPanel: Number | "Feed";
+	CurrentPanel: Guid | "Feed";
 }
 
 // The app
@@ -23,7 +24,7 @@ class App extends React.Component<{},AppState>
 	render()
 	{
 		return <div>
-			<SidePanel CallBack={(id) => this.setState({CurrentPanel: id})}/>
+			<SidePanel CallBack={(guid) => this.setState({CurrentPanel: guid})}/>
 			{/* Decides wether it should render feed or a chat. */}
 			{this.ChoosePanel() }
 		</div>
@@ -37,7 +38,7 @@ class App extends React.Component<{},AppState>
 	{
 		if(this.state.CurrentPanel === "Feed")
 			return <FeedPanel/>
-		return <ChatPanel ChatId = {this.state.CurrentPanel as number}/>
+		return <ChatPanel ChatId = {this.state.CurrentPanel as Guid}/>
 	}
 }
 

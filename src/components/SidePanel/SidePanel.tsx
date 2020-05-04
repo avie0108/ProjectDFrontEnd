@@ -1,13 +1,14 @@
 import * as React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
 
 export interface SidePanelProps
 {
 	// the function that is called when one of the buttons is pressed
 	// @param id: the id of the chat button that is pressed
-	CallBack(id: Number | "Feed"): void;
+	CallBack(id: Guid | "Feed"): void;
 }
 
 // the side panel
@@ -21,9 +22,9 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 				<FontAwesomeIcon icon={faHome} size="2x"/>
 			</button>
 			<hr/>
-			<SidePanelIcon ChatID={554} CallBack={this.props.CallBack}/>
-			<SidePanelIcon ChatID={555} CallBack={this.props.CallBack}/>
-			<SidePanelIcon ChatID={556} CallBack={this.props.CallBack}/>
+			<SidePanelIcon ChatID={Guid.create()} CallBack={this.props.CallBack}/>
+			<SidePanelIcon ChatID={Guid.create()} CallBack={this.props.CallBack}/>
+			<SidePanelIcon ChatID={Guid.create()} CallBack={this.props.CallBack}/>
 		</div>
 	}
 }
@@ -31,11 +32,11 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 interface SidePanelIconProps
 {
 	// the id of the chat that this icon represents
-	ChatID: Number;
+	ChatID: Guid;
 
 	// the function that is called when one of the buttons is pressed
 	// @param id: the id of the chat button that is pressed
-	CallBack(id: Number): void;
+	CallBack(id: Guid): void;
 }
 
 // an icon that reacts when pressed
