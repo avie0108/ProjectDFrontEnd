@@ -46,7 +46,7 @@ class SidePanelIcon extends React.Component<SidePanelIconProps,{}>
 	{
 		return <button onClick={() => this.props.CallBack(this.props.ChatID)}>
 			{/* gets the chat icon from the server*/}
-			<img src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false}/>
+			<img alt="" src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false}/>
 		</button>
 	}
 }

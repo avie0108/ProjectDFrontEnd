@@ -5,6 +5,7 @@ import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
+import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 
 interface AppState
 {
@@ -25,6 +26,7 @@ class App extends React.Component<{},AppState>
 	{
 		return <div>
 			<SidePanel CallBack={(guid) => this.setState({CurrentPanel: guid})}/>
+			<LoginPanel />
 			{/* Decides wether it should render feed or a chat. */}
 			{this.ChoosePanel() }
 		</div>
