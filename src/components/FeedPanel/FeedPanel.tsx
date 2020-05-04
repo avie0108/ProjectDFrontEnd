@@ -34,12 +34,15 @@ export class FeedPanel extends React.Component<{}, {}> {
 
   //since inputs without form don't have validations this function does, if everthings alright it sends the feed
   sentFeedItem() {
-    var inputs:NodeListOf<HTMLInputElement> | undefined = document.getElementsByClassName("feed-form").item(0)?.querySelectorAll("input[class = 'form-element']");
+    var inputs:
+      | NodeListOf<HTMLInputElement>
+      | undefined = document
+      .getElementsByClassName("feed-form")
+      .item(0)
+      ?.querySelectorAll("input[class = 'form-element']");
     var filledIn: Boolean = true;
     inputs?.forEach((x) =>
-      x.value === "" || x.value === "aanmaken"
-        ? (filledIn = false)
-        : true
+      x.value === "" || x.value === "aanmaken" ? (filledIn = false) : true
     );
     if (filledIn === true) {
       this.PopupRef.current?.Hide();
@@ -49,7 +52,7 @@ export class FeedPanel extends React.Component<{}, {}> {
           description: this.TextRef.current?.value,
           category: this.CategorieRef.current?.value,
         },
-        "http://192.168.2.19:12002/api/feedItem"
+        "http://192.168.2.20:12002/api/feedItem"
       );
     } else {
       alert("Vul alle velden in alstublieft.");
@@ -110,6 +113,7 @@ export class FeedPanel extends React.Component<{}, {}> {
               onClick={() => this.sentFeedItem()}
               type="button"
               value="aanmaken"
+              className="feed-button"
             />
           </div>
         </PopUp>
