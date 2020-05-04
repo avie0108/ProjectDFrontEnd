@@ -70,6 +70,7 @@ export class FeedPanel extends React.Component<{}, {}> {
           >
             Creëer feed item
           </button>
+
           {this.getFeedItems()}
         </div>
 
