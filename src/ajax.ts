@@ -1,7 +1,7 @@
 //sends formdata in JSON to the server
-export function sendAsJSON(object:{}, endpoint:string){
+export function sendAsJSON(object:{}, method:string, endpoint:string){
     var xhttp: XMLHttpRequest = new XMLHttpRequest();
-    xhttp.open("post", endpoint, true);
+    xhttp.open(method, endpoint, true);
     xhttp.setRequestHeader("Content-type", "application/json");
 
     var json: string = JSON.stringify(object);
