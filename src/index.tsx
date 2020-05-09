@@ -3,7 +3,8 @@ import * as ReactDom from "react-dom";
 
 import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
-import { FeedPanel } from "./components/FeedPanel/FeedPanel"
+import { FeedPanel } from "./components/FeedPanel/FeedPanel";
+import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 
 interface AppState
 {
@@ -23,6 +24,7 @@ class App extends React.Component<{},AppState>
 	render()
 	{
 		return <div>
+			<LoginPanel />
 			<SidePanel CallBack={(id) => this.setState({CurrentPanel: id})}/>
 			{/* Decides wether it should render feed or a chat. */}
 			{this.ChoosePanel() }
