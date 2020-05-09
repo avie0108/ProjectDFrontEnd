@@ -52,7 +52,7 @@ export class FeedPanel extends React.Component<{}, {}> {
           description: this.TextRef.current?.value,
           category: this.CategorieRef.current?.value,
         },
-        "http://192.168.2.20:12002/api/feedItem"
+        "http://localhost/api/feedItem"
       );
     } else {
       alert("Vul alle velden in alstublieft.");
