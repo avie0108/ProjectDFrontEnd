@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FeedItem } from "./FeedItem";
 import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";
+import { sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 
 export interface FeedPanelState
@@ -25,18 +26,6 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.state = {feedItems: [<FeedItem id= '1' title='1' description='dfdf'/>, <FeedItem id='2' title='3' description='dfdf'/>,<FeedItem id='3'title='1' description='dfdf'/>]}
 
   }
-
-  // // Add feed items to the panel
-  // getFeedItems() {
-  //   let rows = [];
-
-  //   // For now we add 8 feed items to the panel
-  //   for (let i = 0; i < 8; i++) {
-  //     rows.push(<FeedItem />);
-  //   }
-
-  //   return rows;
-  // }
 
   //since inputs without form don't have validations this function does, if everthings alright it sends the feed
   sentFeedItem() {
@@ -65,6 +54,11 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     }
   }
 
+
+  getFeedItems(l:number, o:number) {
+    sendGetRequest(`http://localhost/api/feedItem/?limit=${l.toString()}&offset=${o.toString()}`)
+  }
+
   render() {
     return (
       <div className="feed-panel">
@@ -78,7 +72,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           </button>
 
           <ul>
-            {this.state.feedItems.map((tag: React.ReactNode) => <li>{tag}</li>)}
+            {this.state.feedItems.map((tag: any) => <li>{tag}</li>)}
           </ul>
           {/* {this.getFeedItems()} */}
         </div>

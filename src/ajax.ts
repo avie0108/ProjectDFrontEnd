@@ -13,3 +13,17 @@ export function sendAsJSON(object:{}, endpoint:string){
         }
     }
 }
+
+//gets data from the requested endpoint
+export function sendGetRequest(endpoint:string){
+  var xhttp: XMLHttpRequest = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.status === 0 || (this.status >= 200 && this.status < 400)) {
+      console.log(this.responseText);
+    }
+  }
+
+  xhttp.open("GET", endpoint, true);
+  xhttp.send();
+}
