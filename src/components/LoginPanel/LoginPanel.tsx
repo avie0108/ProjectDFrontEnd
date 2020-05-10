@@ -36,17 +36,18 @@ export class LoginPanel extends React.Component<{}, LoginPanelState>
 
 	render()
 	{
-		return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
-			<div className="login-div">
-				{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
-				Email:<br/>
-				<input type="email" ref={this.EmailRef}/><br/>
-				Wachtwoord:<br/>
-				<input type="password" ref={this.PasswordRef}/><br/>
-				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
-			</div>
-			<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
-		</PopUp>
+		return  () =>console.log('login')
+		// return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
+		// 	<div className="login-div">
+		// 		{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
+		// 		Email:<br/>
+		// 		<input type="email" ref={this.EmailRef}/><br/>
+		// 		Wachtwoord:<br/>
+		// 		<input type="password" ref={this.PasswordRef}/><br/>
+		// 		<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
+		// 	</div>
+		// 	<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
+		// </PopUp>
 	}
 
 	// sends the data to the backend

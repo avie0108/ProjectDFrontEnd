@@ -1,11 +1,15 @@
-import React from "react";
+import React, { Component } from "react";
 import { FeedItem } from "./FeedItem";
 import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 
+export interface FeedPanelState
+{
+  feedItems:any;
+}
 // The feed panel is a container for feed items
-export class FeedPanel extends React.Component<{}, {}> {
+export class FeedPanel extends React.Component<{}, FeedPanelState> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
   CategorieRef: React.RefObject<HTMLInputElement>;
@@ -18,19 +22,21 @@ export class FeedPanel extends React.Component<{}, {}> {
     this.TextRef = React.createRef<HTMLTextAreaElement>();
     this.CategorieRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
+    this.state = {feedItems: [<FeedItem id= '1' title='1' description='dfdf'/>, <FeedItem id='2' title='3' description='dfdf'/>,<FeedItem id='3'title='1' description='dfdf'/>]}
+
   }
 
-  // Add feed items to the panel
-  getFeedItems() {
-    let rows = [];
+  // // Add feed items to the panel
+  // getFeedItems() {
+  //   let rows = [];
 
-    // For now we add 8 feed items to the panel
-    for (let i = 0; i < 8; i++) {
-      rows.push(<FeedItem />);
-    }
+  //   // For now we add 8 feed items to the panel
+  //   for (let i = 0; i < 8; i++) {
+  //     rows.push(<FeedItem />);
+  //   }
 
-    return rows;
-  }
+  //   return rows;
+  // }
 
   //since inputs without form don't have validations this function does, if everthings alright it sends the feed
   sentFeedItem() {
@@ -71,7 +77,10 @@ export class FeedPanel extends React.Component<{}, {}> {
             Creëer feed item
           </button>
 
-          {this.getFeedItems()}
+          <ul>
+            {this.state.feedItems.map((tag: React.ReactNode) => <li>{tag}</li>)}
+          </ul>
+          {/* {this.getFeedItems()} */}
         </div>
 
         <PopUp ref={this.PopupRef}>
