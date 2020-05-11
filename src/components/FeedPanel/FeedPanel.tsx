@@ -8,6 +8,7 @@ import { PopUp } from "../Pop-up/Pop-up";
 export interface FeedPanelState
 {
   feedItems:any;
+  pageNumber:number
 }
 // The feed panel is a container for feed items
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
@@ -23,7 +24,8 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.TextRef = React.createRef<HTMLTextAreaElement>();
     this.CategorieRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
-    this.state = {feedItems: [<FeedItem id= '1' title='1' description='dfdf'/>, <FeedItem id='2' title='3' description='dfdf'/>,<FeedItem id='3'title='1' description='dfdf'/>]}
+    this.state = {feedItems: [<FeedItem id= '1' title='1' description='dfdf'/>, <FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id='3'title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,],
+                  pageNumber: 0}
 
   }
 
@@ -59,11 +61,16 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     sendGetRequest(`http://localhost/api/feedItem/?limit=${l.toString()}&offset=${o.toString()}`)
   }
 
+  updatePageNumber(amount:number){
+    this.setState({pageNumber: this.state.pageNumber + amount})
+    console.log(this.state.pageNumber)
+  }
+
   render() {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-          <h2>Feed Items</h2>
+    <h2>Feed Items {this.state.pageNumber}</h2>
           <button
             onClick={() => this.PopupRef.current?.Show()}
             className="feed-button"
@@ -74,7 +81,9 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           <ul>
             {this.state.feedItems.map((tag: any) => <li>{tag}</li>)}
           </ul>
-          {/* {this.getFeedItems()} */}
+          {/* {this.getFeedItems(this.state.PageNumber,7)} */}
+
+    {this.state.pageNumber > 0 ? <button onClick={()=>{this.updatePageNumber(-7)}}>back</button> : null} {this.state.feedItems.length === 7 ?<button onClick={()=>{this.updatePageNumber(7)}}>forward</button>:null}
         </div>
 
         <PopUp ref={this.PopupRef}>
