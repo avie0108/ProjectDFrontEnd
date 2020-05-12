@@ -5,6 +5,7 @@ import "./MessageBox.scss";
 export interface MessageBoxProps
 {
 	Name: string;
+	OnSendCallBack: (Message: string)=> void;
 }
 
 export class MessageBox extends React.Component<MessageBoxProps,{}>
@@ -15,7 +16,13 @@ export class MessageBox extends React.Component<MessageBoxProps,{}>
 	{
 		return <div className="messagebox">
 			<input type="text" placeholder={"stuur een bericht naar " + this.props.Name} ref={this.InputRef}/>
-			<input type="button" value="&#xf061;" onClick={() => Socket.Send(this.InputRef.current?.value)}/>
+			<input type="button" value="&#xf061;" onClick={() => this.SendMessage()}/>
 		</div>
+	}
+
+	SendMessage()
+	{
+		
+		this.props.OnSendCallBack(this.InputRef.current?.value ?? "");
 	}
 }

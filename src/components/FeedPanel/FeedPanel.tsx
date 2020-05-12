@@ -76,11 +76,11 @@ export class FeedPanel extends React.Component<{}, {}> {
 
   //sends formdata in JSON to the server server
   handleFormSubmit() {
-    var xhttp: XMLHttpRequest = new XMLHttpRequest();
-    xhttp.open("post", "localhost:3001/endpoint", true);
+    let xhttp: XMLHttpRequest = new XMLHttpRequest();
+    xhttp.open("post", "http://192.168.1.105/endpoint", true);
     xhttp.setRequestHeader("Content-type", "application/json");
     
-    var json: string = JSON.stringify({
+    let json: string = JSON.stringify({
       Titel: this.InputRef.current?.value,
       Beschrijving: this.TextRef.current?.value,
       Categorie: this.CategorieRef.current?.value,

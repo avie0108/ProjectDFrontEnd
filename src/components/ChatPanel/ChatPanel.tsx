@@ -10,50 +10,31 @@ export interface ChatPanelProps
 {
 	// The Id of the chat
 	ChatId: Guid;
-}
-
-interface ChatPanelState
-{
-	// the name of this chat
 	Name: string;
 }
 
 // the chat panel
-export class ChatPanel extends React.Component<ChatPanelProps, ChatPanelState>
+export class ChatPanel extends React.Component<ChatPanelProps, {}>
 {
 	constructor(props: ChatPanelProps)
 	{
 		super(props);
-		this.state = {Name: ""};
-		// gets the data from the server in json format
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + props.ChatId + "/Data.json").
-		then(response => response.json()).
-		// stores the name in the state
-		then(json => this.setState({ Name: json.Name}));
-		Sockets.Init();
-		Sockets.AddOnMessageCallBack((soc, ev) => {
-			console.log(ev.data);
-		});
-	}
-
-	// updates the state when new props are being received
-	componentWillReceiveProps(nextProps: ChatPanelProps)
-	{
-		// TODO: caching to make load times faster
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + nextProps.ChatId + "/Data.json").
-		then(response => response.json()).
-		then(json => this.setState({ Name: json.Name}));
 	}
 
 	render()
 	{
 		return <div className="chatpanel">
 			<div className="chattop">
-				<h1>{this.state.Name }</h1>
+				<h1>{this.props.Name }</h1>
 			</div>
 			<Chat ChatId = {this.props.ChatId}/>
-			<MessageBox Name={this.state.Name}/>
+			<MessageBox Name={this.props.Name} OnSendCallBack={() => this.onMessage()}/>
 		</div>;
+	}
+
+	onMessage()
+	{
+
 	}
 }
 
@@ -151,7 +132,7 @@ class ChatMessage extends React.Component<ChatMessageProps, {}>
 			return;
 		}
 		// looks for the id in the previous users
-		var user = ChatMessage.Users.find(x => x.UserID == props.Message.User);
+		let user = ChatMessage.Users.find(x => x.UserID == props.Message.User);
 		// checks if it found a user
 		if(user !== undefined)
 		{
