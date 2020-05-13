@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FeedItem } from "./FeedItem";
+import { FeedItem, FeedItemProps } from "./FeedItem";
 import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";
 import { sendGetRequest } from "../../ajax";
@@ -7,7 +7,7 @@ import { PopUp } from "../Pop-up/Pop-up";
 
 export interface FeedPanelState
 {
-  feedItems:any;
+  feedItems:Array<FeedItem>;
   pageNumber:number
 }
 // The feed panel is a container for feed items
@@ -24,7 +24,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.TextRef = React.createRef<HTMLTextAreaElement>();
     this.CategorieRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
-    this.state = {feedItems: [<FeedItem id= '1' title='1' description='dfdf'/>, <FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id='3'title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,<FeedItem id= '1' title='1' description='dfdf'/>,],
+    this.state = {feedItems: Array<FeedItem>(new FeedItem({ID: '1', Title:'Test Title', Description:'test beschrijving'}), new FeedItem({ID: '1', Title:'Test Title', Description:'test beschrijving'},)),
                   pageNumber: 0}
 
   }
@@ -56,9 +56,9 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     }
   }
 
-
   getFeedItems(l:number, o:number) {
-    sendGetRequest(`http://localhost/api/feedItem/?limit=${l.toString()}&offset=${o.toString()}`)
+    var result: Array<FeedItem> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`)
+    console.log(result)
   }
 
   updatePageNumber(amount:number){
@@ -70,7 +70,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-    <h2>Feed Items {this.state.pageNumber}</h2>
+          <h2>Feed Items</h2>
           <button
             onClick={() => this.PopupRef.current?.Show()}
             className="feed-button"
@@ -79,11 +79,11 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           </button>
 
           <ul>
-            {this.state.feedItems.map((tag: any) => <li>{tag}</li>)}
+            {this.state.feedItems.map((tag: FeedItem) => <FeedItem ID = {tag.props.ID} Title = {tag.props.Title} Description = {tag.props.Description}></FeedItem>)}
           </ul>
-          {/* {this.getFeedItems(this.state.PageNumber,7)} */}
+          {this.getFeedItems(7,this.state.pageNumber)}
 
-    {this.state.pageNumber > 0 ? <button onClick={()=>{this.updatePageNumber(-7)}}>back</button> : null} {this.state.feedItems.length === 7 ?<button onClick={()=>{this.updatePageNumber(7)}}>forward</button>:null}
+        {this.state.pageNumber > 0 ? <button className="feed-button" onClick={()=>{this.updatePageNumber(-7)}}>back</button> : null} {this.state.feedItems.length === 7 ?<button className="feed-button" onClick={()=>{this.updatePageNumber(7)}}>forward</button>:null}
         </div>
 
         <PopUp ref={this.PopupRef}>
