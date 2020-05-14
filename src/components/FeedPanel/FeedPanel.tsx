@@ -66,7 +66,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
       alert("Vul alle velden in alstublieft.");
     }
   }
-
+  //gets the results of the get request and puts them into the state to be rendered out on the screen
   getFeedItems(l: number, o: number) {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res:string)=> {
@@ -76,12 +76,13 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
         var fItem:FeedItem = new FeedItem({ID: f.ID, Title: f.Title, Description: f.Description})
         feedItems.push(fItem);
       });
+      this.setState({feedItems: feedItems})
     })
     }
 
+  //Keeps track of the current page of feedItems the customers is viewing 
   updatePageNumber(amount: number) {
     this.setState({ pageNumber: this.state.pageNumber + amount });
-    console.log(this.state.pageNumber);
   }
 
   render() {
@@ -98,6 +99,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (
               <FeedItem
+                key= {tag.props.ID}
                 ID={tag.props.ID}
                 Title={tag.props.Title}
                 Description={tag.props.Description}
