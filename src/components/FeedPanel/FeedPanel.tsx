@@ -85,6 +85,11 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.setState({ pageNumber: this.state.pageNumber + amount });
   }
 
+  componentDidMount(){
+    this.getFeedItems(7, this.state.pageNumber)
+    setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)
+  }
+
   render() {
     return (
       <div className="feed-panel">
@@ -106,7 +111,6 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
               ></FeedItem>
             ))}
           </ul>
-          {this.getFeedItems(7, this.state.pageNumber)}
           {this.state.pageNumber > 0 ? (
             <button
               className="feed-button"
