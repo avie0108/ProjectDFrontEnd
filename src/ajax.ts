@@ -1,5 +1,4 @@
-
-//sends formdata in JSON to the server
+// Sends formdata in JSON to the server
 export function sendAsJSON(object: {}, method: string, endpoint: string) {
 	var xhttp: XMLHttpRequest = new XMLHttpRequest();
 	xhttp.open(method, endpoint, true);
@@ -15,14 +14,16 @@ export function sendAsJSON(object: {}, method: string, endpoint: string) {
 	};
 }
 
-//gets data from the requested endpoint
+// Gets data from the requested endpoint
 export function sendGetRequest(endpoint: string): Promise<string> {
-	return new Promise((resolve, reject) => {var xhttp: XMLHttpRequest = new XMLHttpRequest();
-	xhttp.open("GET", endpoint, true);
-	let result: string = "";
-	xhttp.onloadend = function () {
-		result = this.responseText;
-		resolve(result)
-	};
-	xhttp.send();})}
-
+	return new Promise((resolve, reject) => {
+		var xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("GET", endpoint, true);
+		let result: string = "";
+		xhttp.onloadend = function () {
+			result = this.responseText;
+			resolve(result)
+		};
+		xhttp.send();
+	})
+}
