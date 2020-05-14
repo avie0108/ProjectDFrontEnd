@@ -1,12 +1,16 @@
-import net from 'net';
-import { Guid } from 'guid-typescript';
+import { Guid } from "guid-typescript";
+import { SocketJsonMessage, ChatInfoMessage, ChatMessageMessage, ChatStatusCode, MessageType, CreateJSONMessage} from "./SocketDataTypes";
 
+// the websocket used for communication
 let Socket: WebSocket;
 
+// if the websocket is initialized
 let Initialized: boolean = false;
 
+// the events that happens when the websocket receives a message
 let OnMessageCallBacks: ((sock: WebSocket, ev: MessageEvent) => any)[] = new Array<(sock: WebSocket, ev: MessageEvent) => any>();
 
+// initializes the websockets
 export async function Init()
 {
 	if(!Initialized)
@@ -15,14 +19,17 @@ export async function Init()
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;
+		AddOnMessageCallBack((s, ev) => console.log(ev.data));
 	}
 }
 
+// adds a new event that is called when the websocket gets data
 export function AddOnMessageCallBack(callBack: ((sock: WebSocket, ev: MessageEvent) => any))
 {
 	OnMessageCallBacks.push(callBack);
 }
 
+// calls all the functions connected with this event
 function OnMessage(this: WebSocket, ev: MessageEvent): any
 {
 	OnMessageCallBacks.forEach(value =>{
@@ -30,74 +37,18 @@ function OnMessage(this: WebSocket, ev: MessageEvent): any
 	});
 }
 
-export async function Send(message: string | any)
+// sends the message to the backend
+export async function Send(message: SocketJsonMessage)
 {
-	if(typeof message === "string")
-		Socket.send(message);
-	else
-		Socket.send(JSON.stringify(message));
+	let m: string = CreateJSONMessage(message);
+	Socket.send(m);
 }
 
-
+// closes the socket and makes it ready to be reinitialized
 export async function Terminate()
 {
 	if(Initialized)
 		Socket.close();
 }
 
-export interface SocketJsonMessage
-{
-	MessageID: Guid;
-	Type: MessageType;
-	Data: Array<ChatroomUpdateMessage>;
-	StatusCode: ChatStatusCode;
-	Command: string | null;
-}
-
-export interface ChatroomUpdateMessage
-{
-	Name: string;
-	Private: boolean;
-	ID: Guid;
-	LastMessage: number | null;
-}
-
-export function GetJsonMessage(message: string): SocketJsonMessage
-{
-	let JsonMessage = JSON.parse(message.replace(/\0/g, ''));
-	JsonMessage.MessageID = Guid.parse(JsonMessage.MessageID);
-	JsonMessage.Type = MessageType[JsonMessage.Type];
-	return JsonMessage;
-}
-
-export enum MessageType
-{
-	//General
-	InvalidMessage,
-
-	//Chat
-	Chat,
-	ChatroomUpdate,
-	ChatMessage,
-}
-
-export enum ChatStatusCode
-{
-	//System announcements (100-199)
-
-	//The client was a good boy. (200-299)
-	OK = 200,
-
-	//The client tried to access something it doesn't have permission for (300-399)
-	ChatroomAccessDenied = 300,
-	CommandAccessDenied = 301,
-
-	//We fucked up. (400-499)
-	BadMessageType = 400,
-	BadMessageData = 401,
-	NoSuchChatroom = 402,
-	AlreadyExists = 403,
-
-	//The server fucked up. (500-599)
-	InternalServerError = 500,
-}
+export * from "./SocketDataTypes";
