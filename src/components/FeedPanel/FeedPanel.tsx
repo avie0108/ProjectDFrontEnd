@@ -71,7 +71,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res:string)=> {
       var feedItemArray:Array<FeedItemProps> = JSON.parse(res);
-      var feedItems: Array<FeedItem>;
+      var feedItems: Array<FeedItem> = [];
       feedItemArray.forEach(f => {
         var fItem:FeedItem = new FeedItem({ID: f.ID, Title: f.Title, Description: f.Description})
         feedItems.push(fItem);
