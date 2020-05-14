@@ -4,3 +4,11 @@ $basesaturation: 2%;
 $basesize: 80px;
 $sidepanelsize: $basesize + 10px;
 $basefont: "Open Sans";
+
+//dark mode
+
+$darkBG: hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+$darkBG2: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
+$darkBG3: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
+$darkBG4: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
+$darkBG6: hsl($basehue,$basesaturation, percentage(($baselighgting * 6) / 255));

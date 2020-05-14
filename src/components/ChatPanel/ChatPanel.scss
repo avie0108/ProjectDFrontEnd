@@ -10,12 +10,12 @@ body{
 	color: #ffffff;
 	font-family: $basefont;
 	height: 100vh;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
+	background-color: $darkBG3;
 }
 
 .chattop{
 	padding-left: $sidepanelsize;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
+	background-color: $darkBG2;
 	height: $basesize;
 }
 

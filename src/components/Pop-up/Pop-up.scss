@@ -13,11 +13,11 @@
 }
 
 .pop-up-div{
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
+	background-color: $darkBG2;
 	padding: 10px;
 	border-radius: 10px;
 	font-family: $basefont;
-	box-shadow: 3px 3px hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+	box-shadow: 3px 3px $darkBG;
 }
 
 .pop-up-bg>.pop-up-div>h1{
