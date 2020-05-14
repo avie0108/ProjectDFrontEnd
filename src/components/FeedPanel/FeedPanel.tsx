@@ -5,10 +5,9 @@ import { sendAsJSON } from "../../ajax";
 import { sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 
-export interface FeedPanelState
-{
-  feedItems:Array<FeedItem>;
-  pageNumber:number
+export interface FeedPanelState {
+  feedItems: Array<FeedItem>;
+  pageNumber: number;
 }
 // The feed panel is a container for feed items
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
@@ -24,9 +23,21 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.TextRef = React.createRef<HTMLTextAreaElement>();
     this.CategorieRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
-    this.state = {feedItems: Array<FeedItem>(new FeedItem({ID: '1', Title:'Test Title', Description:'test beschrijving'}), new FeedItem({ID: '1', Title:'Test Title', Description:'test beschrijving'},)),
-                  pageNumber: 0}
-
+    this.state = {
+      feedItems: Array<FeedItem>(
+        new FeedItem({
+          ID: "1",
+          Title: "Test Title",
+          Description: "test beschrijving",
+        }),
+        new FeedItem({
+          ID: "1",
+          Title: "Test Title",
+          Description: "test beschrijving",
+        })
+      ),
+      pageNumber: 0,
+    };
   }
 
   //since inputs without form don't have validations this function does, if everthings alright it sends the feed
@@ -56,14 +67,21 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     }
   }
 
-  getFeedItems(l:number, o:number) {
-    var result: Array<FeedItem> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`)
-    console.log(result)
-  }
+  getFeedItems(l: number, o: number) {
+    var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
+    result.then((res:string)=> {
+      var feedItemArray:Array<FeedItemProps> = JSON.parse(res);
+      var feedItems: Array<FeedItem>;
+      feedItemArray.forEach(f => {
+        var fItem:FeedItem = new FeedItem({ID: f.ID, Title: f.Title, Description: f.Description})
+        feedItems.push(fItem);
+      });
+    })
+    }
 
-  updatePageNumber(amount:number){
-    this.setState({pageNumber: this.state.pageNumber + amount})
-    console.log(this.state.pageNumber)
+  updatePageNumber(amount: number) {
+    this.setState({ pageNumber: this.state.pageNumber + amount });
+    console.log(this.state.pageNumber);
   }
 
   render() {
@@ -77,18 +95,40 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           >
             Creëer feed item
           </button>
-
           <ul>
-            {this.state.feedItems.map((tag: FeedItem) => <FeedItem ID = {tag.props.ID} Title = {tag.props.Title} Description = {tag.props.Description}></FeedItem>)}
+            {this.state.feedItems.map((tag: FeedItem) => (
+              <FeedItem
+                ID={tag.props.ID}
+                Title={tag.props.Title}
+                Description={tag.props.Description}
+              ></FeedItem>
+            ))}
           </ul>
-          {this.getFeedItems(7,this.state.pageNumber)}
-
-        {this.state.pageNumber > 0 ? <button className="feed-button" onClick={()=>{this.updatePageNumber(-7)}}>back</button> : null} {this.state.feedItems.length === 7 ?<button className="feed-button" onClick={()=>{this.updatePageNumber(7)}}>forward</button>:null}
+          {this.getFeedItems(7, this.state.pageNumber)}
+          {this.state.pageNumber > 0 ? (
+            <button
+              className="feed-button"
+              onClick={() => {
+                this.updatePageNumber(-7);
+              }}
+            >
+              back
+            </button>
+          ) : null}{" "}
+          {this.state.feedItems.length === 7 ? (
+            <button
+              className="feed-button"
+              onClick={() => {
+                this.updatePageNumber(7);
+              }}
+            >
+              forward
+            </button>
+          ) : null}
         </div>
 
-        <PopUp ref={this.PopupRef}>
+        <PopUp ref={this.PopupRef} Header="Feed Item aanmaken">
           <div className="feed-form">
-            <h2>Feed Item aanmaken</h2>
             <input
               type="text"
               className="form-element"
