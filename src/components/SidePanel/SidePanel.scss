@@ -25,7 +25,11 @@
 	padding: 0;
 	outline: none;
 	color: white;
+	font-family: $basefont;
 	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2)/ 255));
+}
+.sidenav button:not(:first-child){
+	font-size: 25pt;
 }
 
 .sidenav button>img{

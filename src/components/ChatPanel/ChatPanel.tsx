@@ -1,5 +1,7 @@
 import * as React from "react";
-import {MessageBox} from "./MessageBox"
+import {MessageBox} from "./MessageBox";
+import * as Sockets from "./Sockets/Sockets";
+import { Guid } from "guid-typescript";
 import "./ChatPanel.scss";
 
 let proxyUrl = "https://cors-anywhere.herokuapp.com/";
@@ -7,47 +9,32 @@ let proxyUrl = "https://cors-anywhere.herokuapp.com/";
 export interface ChatPanelProps 
 {
 	// The Id of the chat
-	ChatId: Number;
-}
-
-interface ChatPanelState
-{
-	// the name of this chat
+	ChatId: Guid;
 	Name: string;
 }
 
 // the chat panel
-export class ChatPanel extends React.Component<ChatPanelProps, ChatPanelState>
+export class ChatPanel extends React.Component<ChatPanelProps, {}>
 {
 	constructor(props: ChatPanelProps)
 	{
 		super(props);
-		this.state = {Name: ""};
-		// gets the data from the server in json format
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + props.ChatId + "/Data.json").
-		then(response => response.json()).
-		// stores the name in the state
-		then(json => this.setState({ Name: json.Name}));
-	}
-
-	// updates the state when new props are being received
-	componentWillReceiveProps(nextProps: ChatPanelProps)
-	{
-		// TODO: caching to make load times faster
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + nextProps.ChatId + "/Data.json").
-		then(response => response.json()).
-		then(json => this.setState({ Name: json.Name}));
 	}
 
 	render()
 	{
 		return <div className="chatpanel">
 			<div className="chattop">
-				<h1>{this.state.Name }</h1>
+				<h1>{this.props.Name }</h1>
 			</div>
 			<Chat ChatId = {this.props.ChatId}/>
-			<MessageBox Name={this.state.Name}/>
+			<MessageBox Name={this.props.Name} OnSendCallBack={() => this.onMessage()}/>
 		</div>;
+	}
+
+	onMessage()
+	{
+
 	}
 }
 
@@ -76,7 +63,7 @@ export class Message
 interface ChatProps
 {
 	// The Id of the chat
-	ChatId: Number;
+	ChatId: Guid;
 }
 
 interface ChatState
@@ -145,7 +132,7 @@ class ChatMessage extends React.Component<ChatMessageProps, {}>
 			return;
 		}
 		// looks for the id in the previous users
-		var user = ChatMessage.Users.find(x => x.UserID == props.Message.User);
+		let user = ChatMessage.Users.find(x => x.UserID == props.Message.User);
 		// checks if it found a user
 		if(user !== undefined)
 		{

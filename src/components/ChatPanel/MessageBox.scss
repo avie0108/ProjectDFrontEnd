@@ -2,6 +2,8 @@
 
 .messagebox {
 	margin-left: $sidepanelsize;
+	padding: 0;
+	display: flex;
 }
 
 .messagebox>input{
@@ -14,6 +16,7 @@
 }
 
 .messagebox>input[type=text]{
+	margin: 0;
 	height: 30px;
 	width: calc(100vw - #{$basesize * 1.5 + 10 * 4});
 	font-size: 13pt;
@@ -22,7 +25,7 @@
 }
 
 .messagebox>input[type=text]::placeholder{
-	color: #eee;
+	color: hsl($basehue,$basesaturation, percentage(($baselighgting * 6) / 255));
 }
 .messagebox>input[type=button]{
 	margin: 0;
