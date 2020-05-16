@@ -24,18 +24,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.CategorieRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
     this.state = {
-      feedItems: Array<FeedItem>(
-        new FeedItem({
-          ID: "1",
-          Title: "Test Title",
-          Description: "test beschrijving",
-        }),
-        new FeedItem({
-          ID: "1",
-          Title: "Test Title",
-          Description: "test beschrijving",
-        })
-      ),
+      feedItems: Array<FeedItem>(),
       pageNumber: 0,
     };
   }
@@ -81,8 +70,11 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     }
 
   //Keeps track of the current page of feedItems the customers is viewing 
-  updatePageNumber(amount: number) {
-    this.setState({ pageNumber: this.state.pageNumber + amount });
+  movePage(NextOrPrev: 'prev' | 'next') {
+
+    var x:number = NextOrPrev === 'prev' ? -7 : 7
+    this.setState({ pageNumber: this.state.pageNumber + x }, () => {this.getFeedItems(7, this.state.pageNumber)});
+
   }
 
   componentDidMount(){
@@ -115,7 +107,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
             <button
               className="feed-button"
               onClick={() => {
-                this.updatePageNumber(-7);
+                this.movePage('prev');
               }}
             >
               back
@@ -125,7 +117,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
             <button
               className="feed-button"
               onClick={() => {
-                this.updatePageNumber(7);
+                this.movePage('next');
               }}
             >
               forward
