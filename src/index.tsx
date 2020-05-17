@@ -30,7 +30,7 @@ class App extends React.Component<{},AppState>
 
 	render()
 	{
-		return <div>
+		return <div data-theme="light">
 			<SidePanel CallBack={(guid, name) => this.setState({CurrentPanel: { ID: guid, Name: name }})} Chats={this.state.SidePanelChats}/>
 			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			{/* Decides wether it should render feed or a chat. */}
@@ -51,8 +51,8 @@ class App extends React.Component<{},AppState>
 	}
 
 	onLogedIn(){
-		Socket.Init();
 		Socket.AddOnMessageCallBack((soc, ev) => this.onSocketMessage(soc, ev));
+		Socket.Init();
 	}
 
 	onSocketMessage(soc: WebSocket, ev: MessageEvent)

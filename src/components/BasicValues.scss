@@ -1,14 +1,30 @@
 $baselighgting: 30;
 $basehue: 180;
-$basesaturation: 2%;
+$basesaturation: 0%;
 $basesize: 80px;
 $sidepanelsize: $basesize + 10px;
 $basefont: "Open Sans";
 
 //dark mode
 
-$darkBG: hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+$darkBG:  hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
 $darkBG2: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
 $darkBG3: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
 $darkBG4: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
+$darkBG5: hsl($basehue,$basesaturation, percentage(($baselighgting * 5) / 255));
 $darkBG6: hsl($basehue,$basesaturation, percentage(($baselighgting * 6) / 255));
+
+$darkColor: #fff;
+$darkPlaceHolder: $darkBG6;
+
+//light mode
+
+$lightBG:  hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 0) / 255));
+$lightBG2: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * .5) / 255));
+$lightBG3: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 1) / 255));
+$lightBG4: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 1.5) / 255));
+$lightBG5: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 2) / 255));
+$lightBG6: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 2.5) / 255));
+
+$lightColor: #000;
+$lightPlaceHolder: $darkBG3;

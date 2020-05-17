@@ -1,5 +1,30 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	
+	.messagebox>input{
+		background-color: $darkBG4;
+		color: $darkColor;
+	}
+
+	.messagebox>input[type=text]::placeholder{
+		color: $darkPlaceHolder;
+	}
+}
+
+[data-theme="light"]{
+	
+	.messagebox>input{
+		background-color: $lightBG4;
+		color: $lightColor;
+	}
+
+	.messagebox>input[type=text]::placeholder{
+		color: $lightPlaceHolder;
+	}
+}
+
+
 .messagebox {
 	margin-left: $sidepanelsize;
 	padding: 0;
@@ -7,9 +32,7 @@
 }
 
 .messagebox>input{
-	background-color: $darkBG4;
 	border: none;
-	color: white;
 	height: 50px;
 	padding: 10px;
 	outline: none;
@@ -24,9 +47,6 @@
 	border-bottom-left-radius: 20px;
 }
 
-.messagebox>input[type=text]::placeholder{
-	color: $darkBG6;
-}
 .messagebox>input[type=button]{
 	margin: 0;
 	font-family: "FontAwesome";
