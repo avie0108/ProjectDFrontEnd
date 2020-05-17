@@ -62,7 +62,7 @@ class SidePanelIcon extends React.Component<SidePanelIconProps,SidePanelIconStat
 	{
 		return <button onClick={() => this.props.CallBack(this.props.ChatID, this.props.ChatName)}>
 			{/* gets the chat icon from the server*/}
-			{ this.state.Error ? this.props.ChatName[0] : <img title={this.props.ChatName} src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false} onError={() => this.setState({Error: true})}/>}
+			{ this.state.Error ? this.props.ChatName[0] : <img title={this.props.ChatName} alt={this.props.ChatName[0]} src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false} onError={() => this.setState({Error: true})}/>}
 		</button>
 	}
 }

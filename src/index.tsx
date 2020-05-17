@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 
-import { ChatPanel, Message } from "./components/ChatPanel/ChatPanel";
+import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
@@ -25,7 +25,7 @@ class App extends React.Component<{},AppState>
 	constructor(props: object)
 	{
 		super(props)
-		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: new Array()};
+		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: Array<{ID: Guid, Name: string}>()};
 	}
 
 	render()

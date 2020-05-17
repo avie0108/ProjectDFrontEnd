@@ -1,5 +1,4 @@
-import { Guid } from "guid-typescript";
-import { SocketJsonMessage, ChatInfoMessage, ChatMessageMessage, ChatStatusCode, MessageType, CreateJSONMessage} from "./SocketDataTypes";
+import { SocketJsonMessage, CreateJSONMessage} from "./SocketDataTypes";
 
 // the websocket used for communication
 let Socket: WebSocket;

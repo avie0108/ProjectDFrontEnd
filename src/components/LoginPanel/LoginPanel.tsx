@@ -82,13 +82,13 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 		// handle the response of the request
 		xhttp.onloadend = () => {
-			if(xhttp.status == 200 || xhttp.status == 204)
+			if(xhttp.status === 200 || xhttp.status === 204)
 			{
 				this.PopUpRef.current?.Hide();
 				this.props.LogedIn();
 				return;
 			}
-			else if(xhttp.status == 401)
+			else if(xhttp.status === 401)
 			{
 				this.setState({ErrorMessage: "incorrect wachtwoord"});
 			}
@@ -103,6 +103,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 	// checks if email is an email
 	static isEmail(email: string): boolean{
+		// eslint-disable-next-line
 		return new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g).test(email);
 	}
 }

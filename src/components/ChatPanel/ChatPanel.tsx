@@ -5,8 +5,6 @@ import * as Sockets from "./Sockets/Sockets";
 import * as Data from "../../Data";
 import "./ChatPanel.scss";
 
-let proxyUrl = "https://cors-anywhere.herokuapp.com/";
-
 export interface ChatPanelProps 
 {
 	// The Id of the chat
