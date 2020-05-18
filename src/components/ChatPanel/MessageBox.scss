@@ -1,19 +1,46 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	
+	.messagebox>input{
+		background-color: $darkBG4;
+		color: $darkColor;
+	}
+
+	.messagebox>input[type=text]::placeholder{
+		color: $darkPlaceHolder;
+	}
+}
+
+[data-theme="light"]{
+	
+	.messagebox>input{
+		background-color: $lightBG4;
+		color: $lightColor;
+	}
+
+	.messagebox>input[type=text]::placeholder{
+		color: $lightPlaceHolder;
+	}
+}
+
+
 .messagebox {
 	margin-left: $sidepanelsize;
+	margin-top: $sidepanelsize / 4;
+	padding: 0;
+	display: flex;
 }
 
 .messagebox>input{
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
 	border: none;
-	color: white;
 	height: 50px;
 	padding: 10px;
 	outline: none;
 }
 
 .messagebox>input[type=text]{
+	margin: 0;
 	height: 30px;
 	width: calc(100vw - #{$basesize * 1.5 + 10 * 4});
 	font-size: 13pt;
@@ -21,9 +48,6 @@
 	border-bottom-left-radius: 20px;
 }
 
-.messagebox>input[type=text]::placeholder{
-	color: #eee;
-}
 .messagebox>input[type=button]{
 	margin: 0;
 	font-family: "FontAwesome";

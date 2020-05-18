@@ -1,112 +1,93 @@
 import * as React from "react";
-import {MessageBox} from "./MessageBox"
+import {MessageBox} from "./MessageBox";
+import { Guid } from "guid-typescript";
+import * as Sockets from "./Sockets/Sockets";
+import * as Data from "../../Data";
+import { ChatMessageMessage } from "./Sockets/Sockets";
 import "./ChatPanel.scss";
-
-let proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export interface ChatPanelProps 
 {
-	// The Id of the chat
-	ChatId: Number;
-}
-
-interface ChatPanelState
-{
-	// the name of this chat
+	// the Id of the chat
+	ChatId: Guid;
+	// the name of the current chat
 	Name: string;
 }
 
 // the chat panel
-export class ChatPanel extends React.Component<ChatPanelProps, ChatPanelState>
+export class ChatPanel extends React.Component<ChatPanelProps, {}>
 {
+	ChatRef: React.RefObject<Chat>;
+
 	constructor(props: ChatPanelProps)
 	{
 		super(props);
-		this.state = {Name: ""};
-		// gets the data from the server in json format
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + props.ChatId + "/Data.json").
-		then(response => response.json()).
-		// stores the name in the state
-		then(json => this.setState({ Name: json.Name}));
-	}
-
-	// updates the state when new props are being received
-	componentWillReceiveProps(nextProps: ChatPanelProps)
-	{
-		// TODO: caching to make load times faster
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + nextProps.ChatId + "/Data.json").
-		then(response => response.json()).
-		then(json => this.setState({ Name: json.Name}));
+		this.ChatRef = React.createRef<Chat>();
 	}
 
 	render()
 	{
 		return <div className="chatpanel">
 			<div className="chattop">
-				<h1>{this.state.Name }</h1>
+				<h1>{this.props.Name }</h1>
 			</div>
-			<Chat ChatId = {this.props.ChatId}/>
-			<MessageBox Name={this.state.Name}/>
+			<Chat ChatId = {this.props.ChatId} ref={this.ChatRef}/>
+			<MessageBox Name={this.props.Name} Room={this.props.ChatId}/>
 		</div>;
 	}
 }
 
-// a user
-export class User
+// a basic message
+export interface Message
 {
-	// the users ID
-	UserID: Number = 0;
-	// the name of the user
-	Username: string = "";
-	// the profile picture of the user
-	ProfilePicture: string = "0.png";
-}
-
-// a basic chat messages
-export class Message
-{
-	// the user (or its id) who sent the message
-	User: User | Number = 0;
-	// the text of the message
-	Text: string = "";
-	// an url to an embedded file
-	Embedded: string | null = null;
+	User: Guid;
+	Text: string;
 }
 
 interface ChatProps
 {
 	// The Id of the chat
-	ChatId: Number;
+	ChatId: Guid;
 }
 
 interface ChatState
 {
-	// the list of messages
-	Messages: Message[];
+	// all the messages sent in this chatroom
+	Messages: Array<Message>;
 }
 
-// the chat
+// the chat to be rendered
 class Chat extends React.Component<ChatProps, ChatState>
 {
-	constructor(props: ChatProps)
+	messageCallBack: (sock: WebSocket, ev: MessageEvent) => any;
+
+	constructor(props: Readonly<ChatProps>)
 	{
-		super(props)
-		this.state = {Messages: Array<Message>()};
-		// gets the data from the server in json format
-		// TODO: get data from ChatPanel
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + props.ChatId + "/Data.json").
-		then(response => response.json()).
-		// stores the messages in the state
-		then(json => this.setState({Messages: json.Messages}));
+		super(props);
+		this.messageCallBack = (soc, ev) => this.OnMessageCallBack(ev.data);
+		Sockets.AddOnMessageCallBack(this.messageCallBack);
+		let messages = Data.getMessages(props.ChatId);
+		if(messages === undefined)
+		{
+			Sockets.Send({
+				MessageID: Guid.create(),
+				Command: "ChatHistory",
+				Data: {
+					ChatroomID: props.ChatId,
+					Start: Data.getLastMessage(props.ChatId) ?? 1,
+					Amount: 50
+				}
+			});
+			this.state = {Messages: Array<Message>()};
+		}
+		else
+		{
+			this.state = {Messages: messages};
+		}
 	}
 
-	// updates the state when new props are being received
-	componentWillReceiveProps(nextProps: ChatPanelProps)
-	{
-		// TODO: caching to make load times faster
-		fetch(proxyUrl + "https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + nextProps.ChatId + "/Data.json").
-		then(response => response.json()).
-		then(json => this.setState({Messages: json.Messages}));
+	componentWillUnmount(){
+		Sockets.RemoveOnMessageCallBack(this.messageCallBack);
 	}
 
 	render()
@@ -117,61 +98,57 @@ class Chat extends React.Component<ChatProps, ChatState>
 			</div>
 		</div>
 	}
+
+	// adds a new message to be rendered
+	AddMessage(message: Message)
+	{
+		this.state.Messages.push(message);
+		this.forceUpdate();
+	}
+
+	// handles new messages coming in
+	OnMessageCallBack(data: any){
+		let Message: Sockets.SocketJsonMessage = Sockets.GetJSONMessage(data);
+		if(Message.Command === "ChatHistory")
+		{
+			let data = Message.Data as Array<ChatMessageMessage>;
+			console.log(data);
+			if(data[0].Chatroom.equals(this.props.ChatId))
+			{
+				let messages: Array<Message> = Array<Message>();
+				data.forEach(x => messages.push({User: x.User, Text: x.Text}))
+				Data.setMessages(this.props.ChatId, messages);
+				this.setState({Messages: messages});
+			}
+		}
+		else if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom.equals(this.props.ChatId))
+		{
+			let data = Message.Data as Sockets.ChatMessageMessage;
+			this.AddMessage({ User: data.User, Text: data.Text});
+		}
+	}
 }
 
 interface ChatMessageProps
 {
-	// the chat message
+	// the message to be rendered
 	Message: Message;
 }
 
-// A message sent by the users
+// a chat message
 class ChatMessage extends React.Component<ChatMessageProps, {}>
 {
-	// all users that have sent a message
-	static Users = Array<User>();
-	// the user that sent this message
-	User: User;
-	constructor(props: ChatMessageProps)
-	{
-		super(props);
-		// checks if the user is an id or an user object
-		if(props.Message.User instanceof Object)
-		{
-			// checks if the user is in the array, and adds it if it isn't
-			if(ChatMessage.Users.findIndex(x =>x.UserID == (props.Message.User as User).UserID) == -1)
-				ChatMessage.Users.push(props.Message.User as User);
-			this.User = props.Message.User as User;
-			return;
-		}
-		// looks for the id in the previous users
-		var user = ChatMessage.Users.find(x => x.UserID == props.Message.User);
-		// checks if it found a user
-		if(user !== undefined)
-		{
-			this.User = user;
-			return;
-		}
-		// makes a new user
-		this.User = new User();
-		// TODO: aks the backend for the users data
-	}
-
 	render()
 	{
 		return <div className="message">
-			<div className="avatar-container">
-				{/* gets the users profile picture*/}
-				<img src={"https://stud.hosted.hr.nl/0958956/ProjectD/Users/ProPic/" + this.User.ProfilePicture} className="avatar" draggable={false}/>
+		<div className="text-container">
+			<div className="name">
+				{Data.getUser(this.props.Message.User)?.Username}
 			</div>
-			<div className="text-container">
-				<div className="name">
-					{this.User.Username}
-				</div>
-				<div className="text">
-					{this.props.Message.Text}
-				</div>
+			<div className="text">
+				{this.props.Message.Text}
 			</div>
 		</div>
+	</div>;
 	}
 }

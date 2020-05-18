@@ -1,56 +1,89 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	color: $darkColor;
+	.feed-panel{
+		background-color: $darkBG2;
+		.feed-form{
+			.form-element{
+				border: 0;
+				background-color: $darkBG4;
+				color: $darkColor;
+			}
+
+			.form-element::placeholder{
+				color: $darkPlaceHolder;
+			}
+			
+			#feed-form-submit {
+				background-color: $darkBG4;
+			}
+		}
+	}
+}
+
+[data-theme="light"]{
+	.feed-panel{
+		color: $lightColor;
+		background-color: $lightBG;
+		.feed-form{
+			.form-element{
+				border: 1px solid $darkBG4;
+				background-color: $lightBG3;
+				color: $lightColor;
+			}
+
+			.form-element::placeholder{
+				color: $lightPlaceHolder;
+			}
+
+			#feed-form-submit {
+				background-color: $lightBG4;
+			}
+		}
+	}
+}
+
 .feed-panel {
-    color: white;
-    box-sizing: border-box;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
-    display: flex;
-    height: 100vh;
-    padding-left: $sidepanelsize;
-    font-family: $basefont;
+	box-sizing: border-box;
+	display: flex;
+	height: 100vh;
+	padding-left: $sidepanelsize;
+	font-family: $basefont;
 
 
-    .feed-items {
-        flex: 1;
-        overflow: auto;
-    }
+	.feed-items {
+		flex: 1;
+		overflow: auto;
+	}
 
-    .feed-form {
-        flex: 1;
-        margin-left: $basesize / 2;
-        
-        .form-element {
-            outline: none;
-            border: 0;
-            font-size: 1.25em;
-            padding: 5px;
-            margin-bottom: $basesize / 4;
-            width: calc(100% - 30px);
-            border-radius: 10px;
-            background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
-            border: none;
-        }
-        
-        .form-element::placeholder{
-            color: #eee;
-        }
+	.feed-form {
+		flex: 1;
+		margin-left: $basesize / 2;
+		
+		.form-element {
+			outline: none;
+			font-size: 1.25em;
+			padding: 5px;
+			margin-bottom: $basesize / 4;
+			width: calc(100% - 30px);
+			border-radius: 10px;
+			border: none;
+		}
 
-        textarea {
-            font-family: $basefont;
-            height: 50vh;
-            color: white;
-            
-        }
-        
-        #feed-form-submit {
-            color: white;
-            height: 50px;
-            font-family: $basefont;
-            font-size: 1em;
-            width: calc(50% - 15px);
-            border-radius: 10px;
-            background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 4) / 255));
-            border: 0;
-        }
-    }
+		textarea {
+			font-family: $basefont;
+			height: 50vh;
+			
+		}
+		
+		#feed-form-submit {
+			height: 50px;
+			font-family: $basefont;
+			font-size: 1em;
+			width: calc(50% - 15px);
+			border-radius: 10px;
+			border: 0;
+		}
+	}
 }
