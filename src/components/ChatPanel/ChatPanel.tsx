@@ -3,8 +3,8 @@ import {MessageBox} from "./MessageBox";
 import { Guid } from "guid-typescript";
 import * as Sockets from "./Sockets/Sockets";
 import * as Data from "../../Data";
-import "./ChatPanel.scss";
 import { ChatMessageMessage } from "./Sockets/Sockets";
+import "./ChatPanel.scss";
 
 export interface ChatPanelProps 
 {
