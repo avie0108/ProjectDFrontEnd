@@ -1,5 +1,49 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	color: $darkColor;
+	.feed-panel{
+		background-color: $darkBG2;
+		.feed-form{
+			.form-element{
+				border: 0;
+				background-color: $darkBG4;
+				color: $darkColor;
+			}
+
+			.form-element::placeholder{
+				color: $darkPlaceHolder;
+			}
+			
+			#feed-form-submit {
+				background-color: $darkBG4;
+			}
+		}
+	}
+}
+
+[data-theme="light"]{
+	.feed-panel{
+		color: $lightColor;
+		background-color: $lightBG;
+		.feed-form{
+			.form-element{
+				border: 1px solid $darkBG4;
+				background-color: $lightBG3;
+				color: $lightColor;
+			}
+
+			.form-element::placeholder{
+				color: $lightPlaceHolder;
+			}
+
+			#feed-form-submit {
+				background-color: $lightBG4;
+			}
+		}
+	}
+}
+
 .feed-panel {
     color: white;
     box-sizing: border-box;

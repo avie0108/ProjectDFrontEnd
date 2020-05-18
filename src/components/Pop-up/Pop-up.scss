@@ -1,5 +1,33 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	.pop-up-div{
+		background-color: $darkBG2;
+	}
+
+	.pop-up-bg{
+		color: $darkColor;
+	}
+
+	.pop-up-bg>.pop-up-div>h1>button{
+		color: $darkColor;
+	}
+}
+
+[data-theme="light"]{
+	.pop-up-div{
+		background-color: $lightBG2;
+	}
+
+	.pop-up-bg{
+		color: $lightColor;
+	}
+
+	.pop-up-bg>.pop-up-div>h1>button{
+		color: $lightColor;
+	}
+}
+
 .pop-up-bg{
 	display: flex;
 	justify-content: center;
@@ -7,6 +35,7 @@
 	height: 200px;
 	position: fixed;
 	z-index: 2;
+	// should always darken the background
 	background-color: rgba($color: #000000, $alpha: ((255 - $baselighgting * 3) / 255));
 	color: white;
 	top: 50%;
@@ -20,7 +49,7 @@
 	padding: 10px;
 	border-radius: 10px;
 	font-family: $basefont;
-	box-shadow: 3px 3px hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+	box-shadow: 3px 3px $darkBG;
 }
 
 .pop-up-bg>.pop-up-div>h1{
@@ -32,6 +61,5 @@
 	float: right;
 	border: none;
 	background: none;
-	color: white;
 	font-size: inherit;
 }

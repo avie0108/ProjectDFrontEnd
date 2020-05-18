@@ -1,5 +1,27 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	.chatpanel{
+		background-color: $darkBG3;
+		color: $darkColor;
+	}
+	
+	.chattop{
+		background-color: $darkBG2;
+	}
+}
+
+[data-theme="light"]{
+	.chatpanel{
+		background-color: $lightBG2;
+		color: $lightColor;
+	}
+	
+	.chattop{
+		background-color: $lightBG4;
+	}
+}
+
 body{
 	margin: 0;
 	padding: 0;
@@ -7,15 +29,12 @@ body{
 }
 
 .chatpanel{
-	color: #ffffff;
 	font-family: $basefont;
 	height: 100vh;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
 }
 
 .chattop{
 	padding-left: $sidepanelsize;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
 	height: $basesize;
 }
 

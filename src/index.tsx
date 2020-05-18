@@ -7,6 +7,7 @@ import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
 import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
+import * as Data from "./Data";
 
 interface AppState
 {
@@ -29,7 +30,7 @@ class App extends React.Component<{},AppState>
 
 	render()
 	{
-		return <div>
+		return <div data-theme="light">
 			<SidePanel CallBack={(guid, name) => this.setState({CurrentPanel: { ID: guid, Name: name }})} Chats={this.state.SidePanelChats}/>
 			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			{/* Decides wether it should render feed or a chat. */}
@@ -50,18 +51,23 @@ class App extends React.Component<{},AppState>
 	}
 
 	onLogedIn(){
-		Socket.Init();
 		Socket.AddOnMessageCallBack((soc, ev) => this.onSocketMessage(soc, ev));
+		Socket.Init();
 	}
 
 	onSocketMessage(soc: WebSocket, ev: MessageEvent)
 	{
-		let Message: Socket.SocketJsonMessage = Socket.GetJsonMessage(ev.data);
-		if(Message.Type != Socket.MessageType.ChatroomUpdate)
+		let message: Socket.SocketJsonMessage = Socket.GetJSONMessage(ev.data);
+		if(message.Type !== Socket.MessageType.ChatInfo)
 			return;
-		let sidePanelData: Array<{ID: Guid, Name: string}> = new Array<{ID: Guid, Name: string}>();
-		Message.Data.forEach(v => sidePanelData.push({ID: v.ID, Name: v.Name}));
-		this.setState({...this.state, SidePanelChats: sidePanelData});
+		let newSidePanelChats: Array<{ID: Guid, Name: string}> = Array<{ID: Guid, Name: string}>();
+		(message.Data as Socket.ChatInfoMessage).Chatrooms.forEach(v => {
+			newSidePanelChats.push({ID: v.ID, Name: v.Name});
+			Data.setLastMessage(v.ID, v.LastMessage ?? 0)
+		});
+		Data.setCurrentUser((message.Data as Socket.ChatInfoMessage).CurrentUser);
+		Data.setUsers((message.Data as Socket.ChatInfoMessage).Users);
+		this.setState({...this.state, SidePanelChats: newSidePanelChats});
 	}
 }
 

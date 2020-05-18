@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as Socket from "./Sockets/Sockets";
 import "./MessageBox.scss";
+import { Guid } from "guid-typescript";
 
 export interface MessageBoxProps
 {
 	Name: string;
-	OnSendCallBack: (Message: string)=> void;
+	Room: Guid;
 }
 
 export class MessageBox extends React.Component<MessageBoxProps,{}>
@@ -22,7 +23,17 @@ export class MessageBox extends React.Component<MessageBoxProps,{}>
 
 	SendMessage()
 	{
-		
-		this.props.OnSendCallBack(this.InputRef.current?.value ?? "");
+		let message: Socket.SocketJsonMessage = {
+			MessageID: Guid.create(),
+			Type: Socket.MessageType.ChatMessage,
+			Command: "ChatMessage",
+			Data: {
+				ChatroomID: this.props.Room,
+				MessageText: this.InputRef.current?.value ?? "",
+			},
+		};
+		Socket.Send(message);
+		if(this.InputRef.current !== null)
+			this.InputRef.current.value = "";
 	}
 }
