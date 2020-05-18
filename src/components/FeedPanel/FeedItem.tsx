@@ -1,5 +1,5 @@
 import React, { ReactHTML } from 'react';
-import { faTimes, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import './FeedItem.scss';
 import { sendAsJSON } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
@@ -41,6 +41,12 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     this.EditPopupRef.current?.Show();
   }
 
+  showDeletePopup() {
+    if (window.confirm("Weet u zeker dat u deze feed item wilt verwijderen?")) {
+      this.deleteFeedItem();
+    }
+  }
+
   // Makes a call to edit the feed item
   // Uses the values in the pop up that is displayed
   editFeedItem() {
@@ -55,10 +61,22 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     );
   }
 
+  deleteFeedItem() {
+    sendAsJSON(
+      {},
+      "DELETE",
+      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+    );
+  }
+
   render() {
     return (
       <div className="feed-item">
-        <div className="feed-item-edit" onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
+        <div className="feed-item-options">
+          <div onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
+          <div>&nbsp;</div>
+          <div onClick={() => this.showDeletePopup()}><FontAwesomeIcon icon={faTrashAlt} /></div>
+        </div>
         <div className="feed-item-text-container">
           <div className="feed-item-title">{this.props.Title}</div>
           <div className="feed-item-description">{this.props.Description}</div>
