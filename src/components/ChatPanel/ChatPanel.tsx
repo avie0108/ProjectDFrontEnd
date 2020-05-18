@@ -4,6 +4,7 @@ import { Guid } from "guid-typescript";
 import * as Sockets from "./Sockets/Sockets";
 import * as Data from "../../Data";
 import "./ChatPanel.scss";
+import { ChatMessageMessage } from "./Sockets/Sockets";
 
 export interface ChatPanelProps 
 {
@@ -58,18 +59,35 @@ interface ChatState
 // the chat to be rendered
 class Chat extends React.Component<ChatProps, ChatState>
 {
-	constructor(props: Readonly<ChatProps>){
+	messageCallBack: (sock: WebSocket, ev: MessageEvent) => any;
+
+	constructor(props: Readonly<ChatProps>)
+	{
 		super(props);
-		this.state = {Messages: Array<Message>()};
-		// sets a way to handle new messages coming in
-		Sockets.AddOnMessageCallBack((soc, ev) => {
-			let Message: Sockets.SocketJsonMessage = Sockets.GetJSONMessage(ev.data);
-			if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom === this.props.ChatId)
-			{
-				let data = Message.Data as Sockets.ChatMessageMessage;
-				this.AddMessage({ User: data.User, Text: data.Text});
-			}
-		});
+		this.messageCallBack = (soc, ev) => this.OnMessageCallBack(ev.data);
+		Sockets.AddOnMessageCallBack(this.messageCallBack);
+		let messages = Data.getMessages(props.ChatId);
+		if(messages === undefined)
+		{
+			Sockets.Send({
+				MessageID: Guid.create(),
+				Command: "ChatHistory",
+				Data: {
+					ChatroomID: props.ChatId,
+					Start: Data.getLastMessage(props.ChatId) ?? 1,
+					Amount: 50
+				}
+			});
+			this.state = {Messages: Array<Message>()};
+		}
+		else
+		{
+			this.state = {Messages: messages};
+		}
+	}
+
+	componentWillUnmount(){
+		Sockets.RemoveOnMessageCallBack(this.messageCallBack);
 	}
 
 	render()
@@ -86,6 +104,28 @@ class Chat extends React.Component<ChatProps, ChatState>
 	{
 		this.state.Messages.push(message);
 		this.forceUpdate();
+	}
+
+	// handles new messages coming in
+	OnMessageCallBack(data: any){
+		let Message: Sockets.SocketJsonMessage = Sockets.GetJSONMessage(data);
+		if(Message.Command === "ChatHistory")
+		{
+			let data = Message.Data as Array<ChatMessageMessage>;
+			console.log(data);
+			if(data[0].Chatroom.equals(this.props.ChatId))
+			{
+				let messages: Array<Message> = Array<Message>();
+				data.forEach(x => messages.push({User: x.User, Text: x.Text}))
+				Data.setMessages(this.props.ChatId, messages);
+				this.setState({Messages: messages});
+			}
+		}
+		else if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom.equals(this.props.ChatId))
+		{
+			let data = Message.Data as Sockets.ChatMessageMessage;
+			this.AddMessage({ User: data.User, Text: data.Text});
+		}
 	}
 }
 

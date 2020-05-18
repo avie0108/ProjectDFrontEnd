@@ -4,11 +4,16 @@ import { Guid } from "guid-typescript";
 export interface SocketJsonMessage
 {
 	MessageID: Guid;
-	Type: MessageType;
-	Data: ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User;
+	Type?: MessageType;
+	Data: ChatData;
 	StatusCode?: ChatStatusCode;
-	Command: string | null;
+	Command: ChatCommand | null;
 };
+
+// the commands available to us
+export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage";
+// the types that data can be in a socket message
+export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory | Array<ChatMessageMessage>;
 
 // the message that the backend sends to update chat info
 export interface ChatInfoMessage
@@ -24,6 +29,13 @@ export interface SentChatMessageMessage
 	ChatroomID : Guid;
 	MessageText: string;
 };
+
+// the message that will be used to request chat history
+export interface SentChatHistory{
+	ChatroomID : Guid;
+	Start: number;
+	Amount: number;
+}
 
 // the message that will be used to recieve chat messages
 export interface ChatMessageMessage
@@ -69,7 +81,7 @@ export enum MessageType
 	//General
 	InvalidMessage,
 
-	//Chat		
+	//Chat
 	ChatInfo,
 	ChatroomCreated,
 	ChatroomUpdated,
@@ -107,27 +119,37 @@ export enum ChatStatusCode
 export function GetJSONMessage(message: string): SocketJsonMessage
 {
 	let json = JSON.parse(message.replace(/\0/g, ''));
-	
 	// set the basic values
 	let real: SocketJsonMessage = json;
 	real.MessageID = Guid.parse(json.MessageID);
 	real.Type = MessageType[json.Type] as any;
 	
-	// set data based on the type of the message
-	switch(real.Type)
-	{
-		case MessageType.UserStatusChanged:
-			(real.Data as User).ID = Guid.parse(json.Data.ID);
-			break;
-		case MessageType.ChatInfo:
-			real.Data = GetChatInfoMessage(json.Data);
-			break;
-		case MessageType.ChatMessage:
-			(real.Data as ChatMessageMessage).User = Guid.parse(json.Data.User);
-			(real.Data as ChatMessageMessage).Chatroom = Guid.parse(json.Data.Chatroom);
-			(real.Data as ChatMessageMessage).Date = new Date(json.Data.Date);
-
-	}
+	// because the backend doesn't know what to use to tell us what kind of data they're sending we have to do this bs
+	// WHY DON'T YOU GUYS STANDARDIZE SHIT?!?!?!?!?!?!?!?
+	if(real.Command === null)
+		// set data based on the type of the message
+		switch(real.Type)
+		{
+			case MessageType.UserStatusChanged:
+				(real.Data as User).ID = Guid.parse(json.Data.ID);
+				break;
+			case MessageType.ChatInfo:
+				real.Data = GetChatInfoMessage(json.Data);
+				break;
+			case MessageType.ChatMessage:
+				(real.Data as ChatMessageMessage).User = Guid.parse(json.Data.User);
+				(real.Data as ChatMessageMessage).Chatroom = Guid.parse(json.Data.Chatroom);
+				(real.Data as ChatMessageMessage).Date = new Date(json.Data.Date);
+		}
+	else
+		switch(real.Command)
+		{
+			case "ChatHistory":
+				let messages: Array<ChatMessageMessage> = Array<ChatMessageMessage>();
+				(json.Data as Array<any>).forEach(x =>
+					messages.push({...x, User: Guid.parse(x.User), Chatroom: Guid.parse(x.Chatroom), Date: new Date(x.Date)}));
+				real.Data = messages
+		}
 	return real;
 }
 
@@ -136,11 +158,15 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 {
 	let js: any = message;
 	js.MessageID = message.MessageID.toString();
-	switch(message.Type)
+	switch(message.Command)
 	{
-		case MessageType.ChatMessage:
+		case "ChatMessage":
 			js.Data = message.Data;
 			js.Data.ChatroomID = (message.Data as SentChatMessageMessage).ChatroomID.toString();
+			break;
+		case "ChatHistory":
+			js.Data.ChatroomID = (message.Data as SentChatHistory).ChatroomID.toString();
+
 	}
 	return JSON.stringify(js);
 }
@@ -153,12 +179,9 @@ function GetChatInfoMessage(Data: any): ChatInfoMessage
 	// fix the Chat rooms
 	let nChatrooms = Array<Chatroom>();
 	(Data.Chatrooms as Array<any>).forEach(v =>{
-		let nChatroom: Chatroom = v;
-		nChatroom.ID = Guid.parse(v.ID);
 		let nUsers =  Array<Guid>();
 		(v.Users as Array<string>).forEach(v => nUsers.push(Guid.parse(v)));
-		nChatroom.Users = nUsers;
-		nChatrooms.push(nChatroom);
+		nChatrooms.push({...v, ID: Guid.parse(v.ID), Users: nUsers});
 	});
 	cIData.Chatrooms = nChatrooms;
 	// converts the ID of the current User
@@ -166,11 +189,7 @@ function GetChatInfoMessage(Data: any): ChatInfoMessage
 
 	// converts the Users
 	let nUsers = Array<User>();
-	(Data.Users as Array<any>).forEach(v =>{
-		let nUser: User = v;
-		nUser.ID = Guid.parse(v.ID);
-		nUsers.push(nUser);
-	});
+	(Data.Users as Array<any>).forEach(v => nUsers.push({...v, ID: Guid.parse(v.ID)}));
 	cIData.Users = nUsers;
 
 	return cIData;

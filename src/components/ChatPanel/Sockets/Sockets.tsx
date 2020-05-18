@@ -28,6 +28,14 @@ export function AddOnMessageCallBack(callBack: ((sock: WebSocket, ev: MessageEve
 	OnMessageCallBacks.push(callBack);
 }
 
+// adds a new event that is called when the websocket gets data
+export function RemoveOnMessageCallBack(callBack: ((sock: WebSocket, ev: MessageEvent) => any))
+{
+	let i = OnMessageCallBacks.indexOf(callBack);
+	if(i > -1)
+		OnMessageCallBacks.splice(i, 1);
+}
+
 // calls all the functions connected with this event
 function OnMessage(this: WebSocket, ev: MessageEvent): any
 {
@@ -40,6 +48,7 @@ function OnMessage(this: WebSocket, ev: MessageEvent): any
 export async function Send(message: SocketJsonMessage)
 {
 	let m: string = CreateJSONMessage(message);
+	console.log(m);
 	Socket.send(m);
 }
 
