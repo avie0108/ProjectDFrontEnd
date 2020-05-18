@@ -1,4 +1,4 @@
-import React, { ReactHTML } from 'react';
+import React from 'react';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import './FeedItem.scss';
 import { sendAsJSON } from "../../ajax";
@@ -54,7 +54,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
       {
         newTitle: this.InputRef.current?.value,
         newDescription: this.TextRef.current?.value,
-        category: this.CategoryRef.current?.value
+        newCategory: this.CategoryRef.current?.value
       },
       "PATCH",
       "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID

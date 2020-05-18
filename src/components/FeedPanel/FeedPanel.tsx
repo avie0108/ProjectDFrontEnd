@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { FeedItem, FeedItemProps } from "./FeedItem";
 import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";

@@ -83,13 +83,13 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 		// handle the response of the request
 		xhttp.onloadend = () => {
-			if(xhttp.status == 200 || xhttp.status == 204)
+			if(xhttp.status === 200 || xhttp.status === 204)
 			{
 				this.PopUpRef.current?.Hide();
 				this.props.LogedIn();
 				return;
 			}
-			else if(xhttp.status == 401)
+			else if(xhttp.status === 401)
 			{
 				this.setState({ErrorMessage: "incorrect wachtwoord"});
 			}
