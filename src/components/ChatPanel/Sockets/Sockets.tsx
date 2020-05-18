@@ -7,7 +7,7 @@ let Socket: WebSocket;
 let Initialized: boolean = false;
 
 // the events that happens when the websocket receives a message
-let OnMessageCallBacks: ((sock: WebSocket, ev: MessageEvent) => any)[] = new Array<(sock: WebSocket, ev: MessageEvent) => any>();
+let OnMessageCallBacks: Array<(sock: WebSocket, ev: MessageEvent) => any> = Array<(sock: WebSocket, ev: MessageEvent) => any>();
 
 // initializes the websockets
 export async function Init()
