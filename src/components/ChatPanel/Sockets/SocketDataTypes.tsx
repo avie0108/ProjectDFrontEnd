@@ -25,6 +25,7 @@ export interface SentChatMessageMessage
 	MessageText: string;
 };
 
+// the message that will be used to recieve chat messages
 export interface ChatMessageMessage
 {
 	ID: number;
@@ -82,11 +83,12 @@ export enum MessageType
 export enum ChatStatusCode
 {
 	//System announcements (100-199)
+	// the system will never announce shit apparently
 
 	//We were good boys. (200-299)
 	OK = 200,
 
-	//We tried to access something we don't have permission for (300-399)
+	//We tried to access something we don't have permissions for (300-399)
 	ChatroomAccessDenied = 300,
 	CommandAccessDenied = 301,
 
@@ -100,13 +102,18 @@ export enum ChatStatusCode
 	InternalServerError = 500,
 };
 
+// gets the JSON message from a string
+// why not JSON.parse? simple guid won't work that way and enums
 export function GetJSONMessage(message: string): SocketJsonMessage
 {
 	let json = JSON.parse(message.replace(/\0/g, ''));
 	
+	// set the basic values
 	let real: SocketJsonMessage = json;
 	real.MessageID = Guid.parse(json.MessageID);
 	real.Type = MessageType[json.Type] as any;
+	
+	// set data based on the type of the message
 	switch(real.Type)
 	{
 		case MessageType.UserStatusChanged:
@@ -124,6 +131,7 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 	return real;
 }
 
+// creates a JSON message
 export function CreateJSONMessage(message: SocketJsonMessage): string
 {
 	let js: any = message;
@@ -137,6 +145,7 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 	return JSON.stringify(js);
 }
 
+// fix inconsistencies in data
 function GetChatInfoMessage(Data: any): ChatInfoMessage
 {
 	let cIData: ChatInfoMessage = Data;

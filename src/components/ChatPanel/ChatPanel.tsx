@@ -7,8 +7,9 @@ import "./ChatPanel.scss";
 
 export interface ChatPanelProps 
 {
-	// The Id of the chat
+	// the Id of the chat
 	ChatId: Guid;
+	// the name of the current chat
 	Name: string;
 }
 
@@ -35,31 +36,39 @@ export class ChatPanel extends React.Component<ChatPanelProps, {}>
 	}
 }
 
+// a basic message
 export interface Message
 {
 	User: Guid;
 	Text: string;
 }
 
-export interface ChatProps
+interface ChatProps
 {
 	// The Id of the chat
 	ChatId: Guid;
 }
 
-export interface ChatState
+interface ChatState
 {
+	// all the messages sent in this chatroom
 	Messages: Array<Message>;
 }
 
-export class Chat extends React.Component<ChatProps, ChatState>
+// the chat to be rendered
+class Chat extends React.Component<ChatProps, ChatState>
 {
 	constructor(props: Readonly<ChatProps>){
 		super(props);
 		this.state = {Messages: Array<Message>()};
+		// sets a way to handle new messages coming in
 		Sockets.AddOnMessageCallBack((soc, ev) => {
-			let Message:Sockets.ChatMessageMessage = Sockets.GetJSONMessage(ev.data).Data as Sockets.ChatMessageMessage;
-			this.AddMessage({ User: Message.User, Text: Message.Text})
+			let Message: Sockets.SocketJsonMessage = Sockets.GetJSONMessage(ev.data);
+			if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom === this.props.ChatId)
+			{
+				let data = Message.Data as Sockets.ChatMessageMessage;
+				this.AddMessage({ User: data.User, Text: data.Text});
+			}
 		});
 	}
 
@@ -72,6 +81,7 @@ export class Chat extends React.Component<ChatProps, ChatState>
 		</div>
 	}
 
+	// adds a new message to be rendered
 	AddMessage(message: Message)
 	{
 		this.state.Messages.push(message);
@@ -79,12 +89,14 @@ export class Chat extends React.Component<ChatProps, ChatState>
 	}
 }
 
-export interface ChatMessageProps
+interface ChatMessageProps
 {
+	// the message to be rendered
 	Message: Message;
 }
 
-export class ChatMessage extends React.Component<ChatMessageProps, {}>
+// a chat message
+class ChatMessage extends React.Component<ChatMessageProps, {}>
 {
 	render()
 	{

@@ -70,7 +70,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 		// making the request that will be sent
 		let xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "http://192.168.1.105/api/login", true);
+		xhttp.open("post", "http://localhost/api/login", true);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		let json: string = JSON.stringify({
 			Email: this.EmailRef.current?.value,

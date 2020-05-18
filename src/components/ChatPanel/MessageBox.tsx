@@ -1,18 +1,21 @@
 import * as React from "react";
 import * as Socket from "./Sockets/Sockets";
-import "./MessageBox.scss";
 import { Guid } from "guid-typescript";
+import "./MessageBox.scss";
 
 export interface MessageBoxProps
 {
+	// name of this chat room
 	Name: string;
+	// the id of this chat room
 	Room: Guid;
 }
 
+// the message box
 export class MessageBox extends React.Component<MessageBoxProps,{}>
 {
-	
 	InputRef: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
+
 	render()
 	{
 		return <div className="messagebox">
@@ -21,6 +24,7 @@ export class MessageBox extends React.Component<MessageBoxProps,{}>
 		</div>
 	}
 
+	// sends the message to backend
 	SendMessage()
 	{
 		let message: Socket.SocketJsonMessage = {

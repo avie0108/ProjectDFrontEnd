@@ -51,6 +51,7 @@ interface SidePanelIconProps
 
 interface SidePanelIconState
 {
+	// if an error ocurred when getting the image
 	Error: boolean;
 }
 
