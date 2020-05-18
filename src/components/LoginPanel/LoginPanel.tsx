@@ -71,7 +71,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 		// making the request that will be sent
 		let xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "http://192.168.1.105/api/login", true);
+		xhttp.open("post", "http://localhost/api/login", true);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		let json: string = JSON.stringify({
 			Email: this.EmailRef.current?.value,
@@ -104,6 +104,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 	// checks if email is an email
 	static isEmail(email: string): boolean{
+		// eslint-disable-next-line
 		return new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g).test(email);
 	}
 }

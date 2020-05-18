@@ -6,38 +6,54 @@ import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
 import { LoginPanel } from "./components/LoginPanel/LoginPanel";
+import { SettingsPanel, Theme} from "./components/Settings/Settings";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
 import * as Data from "./Data";
+import * as Settings from "./components/Settings/Settings";
 
 interface AppState
 {
 	// The currently selected panel if panel is a number that number is then the chat id
 	CurrentPanel: { ID: Guid | "Feed", Name?: string};
-	// The name of the current Panel
-
 	// SidePanel chats
 	SidePanelChats: Array<{ID: Guid, Name: string}>;
+	// The current theme
+	Theme: Theme;
 }
 
 // The app
 class App extends React.Component<{},AppState>
 {
+
+	SettingsRef: React.RefObject<SettingsPanel>;
+
 	constructor(props: object)
 	{
 		super(props)
-		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: []};
+		this.SettingsRef = React.createRef<SettingsPanel>();
+		Settings.AddOnSettingChangedCallBack((s, v) => this.onSettingChanged(s, v))
+		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: Array<{ID: Guid, Name: string}>(), Theme: Settings.GetSetting("Theme")};
 	}
 
 	render()
 	{
-		return <div data-theme="light">
-			<SidePanel CallBack={(guid, name) => this.setState({CurrentPanel: { ID: guid, Name: name }})} Chats={this.state.SidePanelChats}/>
+		return <div data-theme={this.state.Theme}>
+			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
 			<LoginPanel LogedIn={() => this.onLogedIn()}/>
+			<SettingsPanel ref={this.SettingsRef}/>
 			{/* Decides wether it should render feed or a chat. */}
 			{this.ChoosePanel() }
 		</div>
 	}
 
+	// handle what happens when a button in the side panel is clicked
+	SidePanelCallBack(id: Guid | "Feed" | "Settings", name?: string){
+		if(id !== "Settings")
+			this.setState({CurrentPanel: { ID: id, Name: name }});
+		else
+			this.SettingsRef.current?.Show();
+	}
+	
 	/*
 	* Decides wether it should render feed or a chat.
 	* This is decided based on the CurrentPanel in the state.
@@ -50,11 +66,13 @@ class App extends React.Component<{},AppState>
 		return <ChatPanel ChatId = {this.state.CurrentPanel.ID as Guid} Name={this.state.CurrentPanel.Name ?? ""}/>
 	}
 
+	// create a websocket connection when logging in
 	onLogedIn(){
 		Socket.AddOnMessageCallBack((soc, ev) => this.onSocketMessage(soc, ev));
 		Socket.Init();
 	}
 
+	// handle incoming socket messages
 	onSocketMessage(soc: WebSocket, ev: MessageEvent)
 	{
 		let message: Socket.SocketJsonMessage = Socket.GetJSONMessage(ev.data);
@@ -69,7 +87,17 @@ class App extends React.Component<{},AppState>
 		Data.setUsers((message.Data as Socket.ChatInfoMessage).Users);
 		this.setState({...this.state, SidePanelChats: newSidePanelChats});
 	}
+
+	// handle setting changes
+	onSettingChanged(name: Settings.Settings, value: any)
+	{
+		if(name === "Theme")
+			this.setState({...this.state, Theme: value});
+	}
 }
+
+// initialize the settings
+Settings.Init();
 
 // renders the page
 ReactDom.render(

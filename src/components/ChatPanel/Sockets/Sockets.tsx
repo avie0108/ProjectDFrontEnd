@@ -1,5 +1,4 @@
-import { Guid } from "guid-typescript";
-import { SocketJsonMessage, ChatInfoMessage, ChatMessageMessage, ChatStatusCode, MessageType, CreateJSONMessage} from "./SocketDataTypes";
+import { SocketJsonMessage, CreateJSONMessage} from "./SocketDataTypes";
 
 // the websocket used for communication
 let Socket: WebSocket;
@@ -8,14 +7,14 @@ let Socket: WebSocket;
 let Initialized: boolean = false;
 
 // the events that happens when the websocket receives a message
-let OnMessageCallBacks: ((sock: WebSocket, ev: MessageEvent) => any)[] = new Array<(sock: WebSocket, ev: MessageEvent) => any>();
+let OnMessageCallBacks: Array<(sock: WebSocket, ev: MessageEvent) => any> = Array<(sock: WebSocket, ev: MessageEvent) => any>();
 
 // initializes the websockets
 export async function Init()
 {
 	if(!Initialized)
 	{
-		Socket = new WebSocket("ws://192.168.1.105/chat");
+		Socket = new WebSocket("ws://localhost/chat");
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;
@@ -27,6 +26,14 @@ export async function Init()
 export function AddOnMessageCallBack(callBack: ((sock: WebSocket, ev: MessageEvent) => any))
 {
 	OnMessageCallBacks.push(callBack);
+}
+
+// adds a new event that is called when the websocket gets data
+export function RemoveOnMessageCallBack(callBack: ((sock: WebSocket, ev: MessageEvent) => any))
+{
+	let i = OnMessageCallBacks.indexOf(callBack);
+	if(i > -1)
+		OnMessageCallBacks.splice(i, 1);
 }
 
 // calls all the functions connected with this event
@@ -41,6 +48,7 @@ function OnMessage(this: WebSocket, ev: MessageEvent): any
 export async function Send(message: SocketJsonMessage)
 {
 	let m: string = CreateJSONMessage(message);
+	console.log(m);
 	Socket.send(m);
 }
 

@@ -3,14 +3,14 @@ import {MessageBox} from "./MessageBox";
 import { Guid } from "guid-typescript";
 import * as Sockets from "./Sockets/Sockets";
 import * as Data from "../../Data";
+import { ChatMessageMessage } from "./Sockets/Sockets";
 import "./ChatPanel.scss";
-
-let proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
 export interface ChatPanelProps 
 {
-	// The Id of the chat
+	// the Id of the chat
 	ChatId: Guid;
+	// the name of the current chat
 	Name: string;
 }
 
@@ -37,32 +37,57 @@ export class ChatPanel extends React.Component<ChatPanelProps, {}>
 	}
 }
 
+// a basic message
 export interface Message
 {
 	User: Guid;
 	Text: string;
 }
 
-export interface ChatProps
+interface ChatProps
 {
 	// The Id of the chat
 	ChatId: Guid;
 }
 
-export interface ChatState
+interface ChatState
 {
+	// all the messages sent in this chatroom
 	Messages: Array<Message>;
 }
 
-export class Chat extends React.Component<ChatProps, ChatState>
+// the chat to be rendered
+class Chat extends React.Component<ChatProps, ChatState>
 {
-	constructor(props: Readonly<ChatProps>){
+	messageCallBack: (sock: WebSocket, ev: MessageEvent) => any;
+
+	constructor(props: Readonly<ChatProps>)
+	{
 		super(props);
-		this.state = {Messages: Array<Message>()};
-		Sockets.AddOnMessageCallBack((soc, ev) => {
-			let Message:Sockets.ChatMessageMessage = Sockets.GetJSONMessage(ev.data).Data as Sockets.ChatMessageMessage;
-			this.AddMessage({ User: Message.User, Text: Message.Text})
-		});
+		this.messageCallBack = (soc, ev) => this.OnMessageCallBack(ev.data);
+		Sockets.AddOnMessageCallBack(this.messageCallBack);
+		let messages = Data.getMessages(props.ChatId);
+		if(messages === undefined)
+		{
+			Sockets.Send({
+				MessageID: Guid.create(),
+				Command: "ChatHistory",
+				Data: {
+					ChatroomID: props.ChatId,
+					Start: Data.getLastMessage(props.ChatId) ?? 1,
+					Amount: 50
+				}
+			});
+			this.state = {Messages: Array<Message>()};
+		}
+		else
+		{
+			this.state = {Messages: messages};
+		}
+	}
+
+	componentWillUnmount(){
+		Sockets.RemoveOnMessageCallBack(this.messageCallBack);
 	}
 
 	render()
@@ -74,19 +99,44 @@ export class Chat extends React.Component<ChatProps, ChatState>
 		</div>
 	}
 
+	// adds a new message to be rendered
 	AddMessage(message: Message)
 	{
 		this.state.Messages.push(message);
 		this.forceUpdate();
 	}
+
+	// handles new messages coming in
+	OnMessageCallBack(data: any){
+		let Message: Sockets.SocketJsonMessage = Sockets.GetJSONMessage(data);
+		if(Message.Command === "ChatHistory")
+		{
+			let data = Message.Data as Array<ChatMessageMessage>;
+			console.log(data);
+			if(data[0].Chatroom.equals(this.props.ChatId))
+			{
+				let messages: Array<Message> = Array<Message>();
+				data.forEach(x => messages.push({User: x.User, Text: x.Text}))
+				Data.setMessages(this.props.ChatId, messages);
+				this.setState({Messages: messages});
+			}
+		}
+		else if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom.equals(this.props.ChatId))
+		{
+			let data = Message.Data as Sockets.ChatMessageMessage;
+			this.AddMessage({ User: data.User, Text: data.Text});
+		}
+	}
 }
 
-export interface ChatMessageProps
+interface ChatMessageProps
 {
+	// the message to be rendered
 	Message: Message;
 }
 
-export class ChatMessage extends React.Component<ChatMessageProps, {}>
+// a chat message
+class ChatMessage extends React.Component<ChatMessageProps, {}>
 {
 	render()
 	{
