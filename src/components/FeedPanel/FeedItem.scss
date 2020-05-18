@@ -22,8 +22,28 @@
         font-weight: bold;
     }
 
-    .feed-item-desc {
+    .feed-item-description {
         font-size: 1rem;
+    }
+
+    .feed-item-category {
+        border-radius: 40px;
+        font-size: 1rem;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: fit-content;
+    }
+
+    .General {
+        background: #50C533;
+    }
+
+    .Personal {
+        background: #39AADF;
+    }
+
+    .Note {
+        background: #DA963B;
     }
 
     .feed-item-reply-like-comment {

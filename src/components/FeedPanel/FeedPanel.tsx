@@ -54,7 +54,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
       var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
       var feedItems: Array<FeedItem> = [];
       feedItemArray.forEach(f => {
-        var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description })
+        var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
         feedItems.push(fItem);
       });
       this.setState({ feedItems: feedItems })
@@ -89,6 +89,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
                 ID={tag.props.ID}
                 Title={tag.props.Title}
                 Description={tag.props.Description}
+                Category={tag.props.Category}
               ></FeedItem>
             ))}
           </ul>
