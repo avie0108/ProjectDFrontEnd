@@ -69,6 +69,17 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     );
   }
 
+  getDutchCategoryName() {
+    switch (this.props.Category) {
+      case "General":
+        return "Algemeen";
+      case "Personal":
+        return "Persoonlijk";
+      case "Note":
+        return "Notule";
+    }
+  }
+
   render() {
     return (
       <div className="feed-item">
@@ -80,8 +91,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
         <div className="feed-item-text-container">
           <div className="feed-item-title">{this.props.Title}</div>
           <div className="feed-item-description">{this.props.Description}</div>
-          <div className={'feed-item-category ' + this.props.Category}>{this.props.Category}</div>
-          {/* <div className="feed-item-reply-like-comment">Reply Like Comment</div> */}
+          <div className={'feed-item-category ' + this.props.Category}>{this.getDutchCategoryName()}</div>
         </div>
         <div className="feed-item-image-container">
           <div className="feed-item-image"></div>
