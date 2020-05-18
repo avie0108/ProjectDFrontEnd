@@ -14,7 +14,7 @@ export async function Init()
 {
 	if(!Initialized)
 	{
-		Socket = new WebSocket("ws://192.168.1.105/chat");
+		Socket = new WebSocket("ws://localhost/chat");
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;
