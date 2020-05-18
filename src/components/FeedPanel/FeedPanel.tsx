@@ -51,13 +51,17 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   getFeedItems(l: number, o: number) {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res: string) => {
-      var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
-      var feedItems: Array<FeedItem> = [];
-      feedItemArray.forEach(f => {
-        var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
-        feedItems.push(fItem);
-      });
-      this.setState({ feedItems: feedItems })
+      console.log(res);
+      if(res)
+      {
+        var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
+        var feedItems: Array<FeedItem> = [];
+        feedItemArray.forEach(f => {
+          var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
+          feedItems.push(fItem);
+        });
+        this.setState({ feedItems: feedItems })
+      }
     })
   }
 

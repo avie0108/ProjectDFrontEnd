@@ -67,6 +67,7 @@ class Chat extends React.Component<ChatProps, ChatState>
 		this.messageCallBack = (soc, ev) => this.OnMessageCallBack(ev.data);
 		Sockets.AddOnMessageCallBack(this.messageCallBack);
 		let messages = Data.getMessages(props.ChatId);
+		console.log()
 		if(messages === undefined)
 		{
 			Sockets.Send({
@@ -112,14 +113,14 @@ class Chat extends React.Component<ChatProps, ChatState>
 		if(Message.Command === "ChatHistory")
 		{
 			let data = Message.Data as Array<ChatMessageMessage>;
-			console.log(data);
-			if(data[0].Chatroom.equals(this.props.ChatId))
-			{
-				let messages: Array<Message> = Array<Message>();
-				data.forEach(x => messages.push({User: x.User, Text: x.Text}))
-				Data.setMessages(this.props.ChatId, messages);
-				this.setState({Messages: messages});
-			}
+			if(data.length !== 0)
+				if(data[0].Chatroom.equals(this.props.ChatId))
+				{
+					let messages: Array<Message> = Array<Message>();
+					data.forEach(x => messages.push({User: x.User, Text: x.Text}))
+					Data.setMessages(this.props.ChatId, messages);
+					this.setState({Messages: messages});
+				}
 		}
 		else if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom.equals(this.props.ChatId))
 		{
