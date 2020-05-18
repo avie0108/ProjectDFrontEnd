@@ -18,17 +18,17 @@
 
 [data-theme="light"]{
 	.sidenav{
-		background-color: $lightBG3;
+		background-color: $darkBG;
 		color: $darkColor;
 	}
 	
 	.sidenav button{
-		background-color: $lightBG;
-		color: $lightColor;
+		background-color: $darkBG2;
+		color: $darkColor;
 	}
 	
 	.sidenav>hr{
-		border-color: $lightBG6;
+		border-color: $darkBG3;
 	}
 }
 
