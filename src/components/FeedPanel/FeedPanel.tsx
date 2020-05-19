@@ -69,7 +69,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     })
     }
 
-  //Keeps track of the current page of feedItems the customers is viewing 
+  //gets the items of the next or previous page
   movePage(NextOrPrev: 'prev' | 'next') {
 
     var x:number = NextOrPrev === 'prev' ? -7 : 7
