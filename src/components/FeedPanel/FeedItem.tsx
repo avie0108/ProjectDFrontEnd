@@ -10,6 +10,7 @@ export interface FeedItemProps
 }
 // Feed items are posts a user can make
 // It contains a title, a description and optionally a picture
+
 export class FeedItem extends React.Component<FeedItemProps,{}> {
 
   constructor(props: FeedItemProps) {

@@ -1,5 +1,37 @@
 @import "../BasicValues.scss";
 
+[data-theme="dark"]{
+	.sidenav{
+		background-color: $darkBG;
+		color: $darkColor;
+	}
+	
+	.sidenav button{
+		background-color: $darkBG2;
+		color: $darkColor;
+	}
+	
+	.sidenav>hr{
+		border-color: $darkBG3;
+	}
+}
+
+[data-theme="light"]{
+	.sidenav{
+		background-color: $darkBG;
+		color: $darkColor;
+	}
+	
+	.sidenav button{
+		background-color: $darkBG2;
+		color: $darkColor;
+	}
+	
+	.sidenav>hr{
+		border-color: $darkBG3;
+	}
+}
+
 .sidenav{
 	height: 100%;
 	width: $basesize;
@@ -7,12 +39,10 @@
 	z-index: 1;
 	top: 0;
 	left: 0;
-	background-color: hsl($basehue,$basesaturation, percentage($baselighgting / 255));
 	overflow-x: hidden;
 	transition: 0.5s;
 	border-top-right-radius: 30px;
 	border-bottom-right-radius: 30px;
-	color: white;
 }
 
 .sidenav button{
@@ -24,8 +54,10 @@
 	transition: 0.5s;
 	padding: 0;
 	outline: none;
-	color: white;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2)/ 255));
+	font-family: $basefont;
+}
+.sidenav button:not(:first-child){
+	font-size: 25pt;
 }
 
 .sidenav button>img{
@@ -42,7 +74,7 @@
 }
 
 .sidenav>hr{
-	border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting * 3)/ 255));
+	border: 1px solid;
 	border-radius: 20px;
 	width: $basesize - 10;
 	margin-top: 0px;

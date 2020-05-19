@@ -10,6 +10,7 @@ export interface FeedPanelState {
   pageNumber: number;
 }
 // The feed panel is a container for feed items
+
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
@@ -160,15 +161,15 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
               <option>Persoonlijk</option>
             </datalist>
 
-            <input
-              onClick={() => this.sentFeedItem()}
-              type="button"
-              value="aanmaken"
-              className="feed-button"
-            />
-          </div>
-        </PopUp>
-      </div>
-    );
-  }
+						<input
+							onClick={() => this.sentFeedItem()}
+							type="button"
+							value="aanmaken"
+							className="feed-button"
+						/>
+					</div>
+				</PopUp>
+			</div>
+		);
+	}
 }

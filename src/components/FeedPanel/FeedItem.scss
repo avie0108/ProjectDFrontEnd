@@ -1,48 +1,79 @@
 @import "./../BasicValues.scss";
 
+[data-theme="dark"]{
+	.feed-item{
+		background-color: $darkBG3;
+	}
+	
+	.feed-item-image-container {
+		.feed-item-image {
+			background-color: $darkBG5;
+		}
+	}
+	
+	.feed-button {
+		background-color: $darkBG3;
+		color: $darkColor;
+	}
+}
+
+[data-theme="light"]{
+	.feed-item{
+		background-color: $lightBG3;
+	}
+	
+	.feed-item-image-container {
+		.feed-item-image {
+			background-color: $lightBG5;
+		}
+	}
+	
+	.feed-button {
+		background-color: $lightBG3;
+		color: $lightColor;
+	}
+}
+
+
 .feed-item {
-    background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
-    border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
-    box-sizing: border-box;
-    border-radius: 15px;
-    padding: 10px;
-    width: 100%;
-    margin: 5px 0px;
-    margin-bottom: 5px;
+	border: 1px solid $darkBG;
+	box-sizing: border-box;
+	border-radius: 15px;
+	padding: 10px;
+	width: 100%;
+	margin: 5px 0px;
+	margin-bottom: 5px;
 }
 
 .feed-item-text-container {
-    .feed-item-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
+	.feed-item-title {
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
 
-    .feed-item-desc {
-        font-size: 1rem;
-    }
+	.feed-item-desc {
+		font-size: 1rem;
+	}
 
-    .feed-item-reply-like-comment {
-        font-style: italic;
-        font-size: 1.25rem;
-    }
+	.feed-item-reply-like-comment {
+		font-style: italic;
+		font-size: 1.25rem;
+	}
 }
-  
+
 .feed-item-image-container {
-    .feed-item-image {
-        background-color: #BBBBBB;
-        border-radius: 25px;
-        height: 100%;
-    }
+	.feed-item-image {
+		border-radius: 25px;
+		height: 100%;
+	}
 }
 
 .feed-button {
-    background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
-    border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
-    box-sizing: border-box;
-    border-radius: 15px;
-    padding: 10px;
-    margin: 5px 0px;
-    margin-bottom: 5px;
-    color: white;
-    font-size: 1rem;
+	border: 1px solid $darkBG;
+	box-sizing: border-box;
+	border-radius: 15px;
+	padding: 10px;
+	margin: 5px 0px;
+	margin-bottom: 5px;
+	font-size: 1rem;
 }
