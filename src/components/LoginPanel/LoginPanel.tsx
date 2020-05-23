@@ -23,6 +23,8 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 	PasswordRef: React.RefObject<HTMLInputElement>;
 	RememberMeRef: React.RefObject<HTMLInputElement>;
 
+	Sending: boolean;
+
 	constructor(props: Readonly<LoginPanelProps>)
 	{
 		super(props)
@@ -30,6 +32,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		this.EmailRef = React.createRef<HTMLInputElement>();
 		this.PasswordRef = React.createRef<HTMLInputElement>();
 		this.RememberMeRef = React.createRef<HTMLInputElement>();
+		this.Sending = false;
 		this.state = {ErrorMessage:null};
 	}
 
@@ -41,18 +44,17 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 	render()
 	{
-		return  () =>console.log('login')
-		// return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
-		// 	<div className="login-div">
-		// 		{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
-		// 		Email:<br/>
-		// 		<input type="email" ref={this.EmailRef}/><br/>
-		// 		Wachtwoord:<br/>
-		// 		<input type="password" ref={this.PasswordRef}/><br/>
-		// 		<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
-		// 	</div>
-		// 	<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
-		// </PopUp>
+		return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
+			<div className="login-div">
+				{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
+				Email:<br/>
+				<input type="email" ref={this.EmailRef}/><br/>
+				Wachtwoord:<br/>
+				<input type="password" ref={this.PasswordRef}/><br/>
+				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
+			</div>
+			<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
+		</PopUp>
 	}
 
 	// sends the data to the backend
@@ -68,38 +70,42 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 			this.setState({ErrorMessage: "leeg Wachtwoord"});
 			return;
 		}
-
-		// making the request that will be sent
-		let xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "http://localhost/api/login", true);
-		xhttp.setRequestHeader("Content-type", "application/json");
-		let json: string = JSON.stringify({
-			Email: this.EmailRef.current?.value,
-			Password: this.PasswordRef.current?.value,
-			RememberMe: this.RememberMeRef.current?.checked
-		});
-		
-		xhttp.withCredentials = true;
-
-		// handle the response of the request
-		xhttp.onloadend = () => {
-			if(xhttp.status === 200 || xhttp.status === 204)
-			{
-				this.PopUpRef.current?.Hide();
-				this.props.LogedIn();
-				return;
-			}
-			else if(xhttp.status === 401)
-			{
-				this.setState({ErrorMessage: "incorrect wachtwoord"});
-			}
-			else
-			{
-				this.setState({ErrorMessage: xhttp.responseText});
-			}
-		};
-		// send the request
-		xhttp.send(json);
+		if(!this.Sending)
+		{
+			this.Sending = true;
+			// making the request that will be sent
+			let xhttp: XMLHttpRequest = new XMLHttpRequest();
+			xhttp.open("post", "http://localhost/api/login", true);
+			xhttp.setRequestHeader("Content-type", "application/json");
+			let json: string = JSON.stringify({
+				Email: this.EmailRef.current?.value,
+				Password: this.PasswordRef.current?.value,
+				RememberMe: this.RememberMeRef.current?.checked
+			});
+			
+			xhttp.withCredentials = true;
+			
+			// handle the response of the request
+			xhttp.onloadend = () => {
+				this.Sending = false;
+				if(xhttp.status === 200 || xhttp.status === 204)
+				{
+					this.PopUpRef.current?.Hide();
+					this.props.LogedIn();
+					return;
+				}
+				else if(xhttp.status === 401)
+				{
+					this.setState({ErrorMessage: "incorrect wachtwoord"});
+				}
+				else
+				{
+					this.setState({ErrorMessage: xhttp.responseText});
+				}
+			};
+			// send the request
+			xhttp.send(json);
+		}
 	}
 
 	// checks if email is an email

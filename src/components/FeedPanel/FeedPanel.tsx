@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { FeedItem, FeedItemProps } from "./FeedItem";
 import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";
@@ -9,66 +9,61 @@ export interface FeedPanelState {
   feedItems: Array<FeedItem>;
   pageNumber: number;
 }
+
 // The feed panel is a container for feed items
 
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
-  CategorieRef: React.RefObject<HTMLInputElement>;
+  CategoryRef: React.RefObject<HTMLSelectElement>;
   PopupRef: React.RefObject<PopUp>;
 
   constructor(props: {}) {
     super(props);
+
     //Creates a react reference for each feed item field in the form using this reference we can get the elements values
     this.InputRef = React.createRef<HTMLInputElement>();
     this.TextRef = React.createRef<HTMLTextAreaElement>();
-    this.CategorieRef = React.createRef<HTMLInputElement>();
+    this.CategoryRef = React.createRef<HTMLSelectElement>();
     this.PopupRef = React.createRef<PopUp>();
+
     this.state = {
       feedItems: Array<FeedItem>(),
       pageNumber: 0,
     };
   }
 
-  //since inputs without form don't have validations this function does, if everthings alright it sends the feed
-  sentFeedItem() {
-    var inputs:
-      | NodeListOf<HTMLInputElement>
-      | undefined = document
-      .getElementsByClassName("feed-form")
-      .item(0)
-      ?.querySelectorAll("input[class = 'form-element']");
-    var filledIn: Boolean = true;
-    inputs?.forEach((x) =>
-      x.value === "" || x.value === "aanmaken" ? (filledIn = false) : true
+  // Sends a feed item to the server
+  sendFeedItem() {
+    sendAsJSON(
+      {
+        title: this.InputRef.current?.value,
+        description: this.TextRef.current?.value,
+        category: this.CategoryRef.current?.value
+      },
+      "POST",
+      "http://localhost/api/feedItem"
     );
-    if (filledIn === true) {
-      this.PopupRef.current?.Hide();
-      sendAsJSON(
-        {
-          title: this.InputRef.current?.value,
-          description: this.TextRef.current?.value,
-          category: this.CategorieRef.current?.value,
-        },
-        "http://localhost/api/feedItem"
-      );
-    } else {
-      alert("Vul alle velden in alstublieft.");
-    }
+
+    this.PopupRef.current?.Hide();
   }
-  //gets the results of the get request and puts them into the state to be rendered out on the screen
+
+  // Gets the results of the get request and puts them into the state to be rendered out on the screen
   getFeedItems(l: number, o: number) {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
-    result.then((res:string)=> {
-      var feedItemArray:Array<FeedItemProps> = JSON.parse(res);
-      var feedItems: Array<FeedItem> = [];
-      feedItemArray.forEach(f => {
-        var fItem:FeedItem = new FeedItem({ID: f.ID, Title: f.Title, Description: f.Description})
-        feedItems.push(fItem);
-      });
-      this.setState({feedItems: feedItems})
+    result.then((res: string) => {
+      if(res)
+      {
+        var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
+        var feedItems: Array<FeedItem> = [];
+        feedItemArray.forEach(f => {
+          var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
+          feedItems.push(fItem);
+        });
+        this.setState({ feedItems: feedItems })
+      }
     })
-    }
+  }
 
   //gets the items of the next or previous page
   movePage(NextOrPrev: 'prev' | 'next') {
@@ -78,6 +73,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
   }
 
+  // sets the interval for getting feed items
   componentDidMount(){
     this.getFeedItems(7, this.state.pageNumber)
     setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)
@@ -92,38 +88,23 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
             onClick={() => this.PopupRef.current?.Show()}
             className="feed-button"
           >
-            Creëer feed item
+            Nieuw Feed Item
           </button>
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (
               <FeedItem
-                key= {tag.props.ID}
+                key={tag.props.ID}
                 ID={tag.props.ID}
                 Title={tag.props.Title}
                 Description={tag.props.Description}
+                Category={tag.props.Category}
               ></FeedItem>
             ))}
           </ul>
           {this.state.pageNumber > 0 ? (
-            <button
-              className="feed-button"
-              onClick={() => {
-                this.movePage('prev');
-              }}
-            >
-              back
-            </button>
-          ) : null}{" "}
+            <button className="feed-button feed-button-prev" onClick={() => { this.movePage('prev'); }}>Vorige</button>) : null}{" "}
           {this.state.feedItems.length === 7 ? (
-            <button
-              className="feed-button"
-              onClick={() => {
-                this.movePage('next');
-              }}
-            >
-              forward
-            </button>
-          ) : null}
+            <button className="feed-button feed-button-next" onClick={() => { this.movePage('next'); }}>Volgende</button>) : null}
         </div>
 
         <PopUp ref={this.PopupRef} Header="Feed Item aanmaken">
