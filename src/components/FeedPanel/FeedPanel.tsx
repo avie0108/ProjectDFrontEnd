@@ -51,13 +51,15 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   getFeedItems(l: number, o: number) {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res: string) => {
-      var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
-      var feedItems: Array<FeedItem> = [];
-      feedItemArray.forEach(f => {
-        var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
-        feedItems.push(fItem);
-      });
-      this.setState({ feedItems: feedItems })
+      if (res) {
+        var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
+        var feedItems: Array<FeedItem> = [];
+        feedItemArray.forEach(f => {
+          var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
+          feedItems.push(fItem);
+        });
+        this.setState({ feedItems: feedItems })
+      }
     })
   }
 
@@ -111,7 +113,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
                 <option value="" selected disabled>Kies een categorie...</option>
                 <option value="General">Algemeen</option>
                 <option value="Personal">Persoonlijk</option>
-                <option value="Note">Notule</option>
+                <option value="Note">Opmerking</option>
               </select>
               <input type="submit" value="Aanmaken" className="feed-button" />
             </form>

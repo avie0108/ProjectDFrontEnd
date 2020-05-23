@@ -76,7 +76,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
       case "Personal":
         return "Persoonlijk";
       case "Note":
-        return "Notule";
+        return "Opmerking";
     }
   }
 
@@ -106,7 +106,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
                 <option value="" selected disabled>Kies een nieuwe categorie...</option>
                 <option value="General">Algemeen</option>
                 <option value="Personal">Persoonlijk</option>
-                <option value="Note">Notule</option>
+                <option value="Note">Opmerking</option>
               </select>
               <input type="submit" value="Wijzigen" className="feed-button" />
             </form>
