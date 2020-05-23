@@ -3,7 +3,7 @@ import { PopUp } from "../Pop-up/Pop-up";
 import { SetCookie, CheckCookie, GetCookie } from "./Cookies/Cookies";
 import "./Settings.scss";
 
-// the possible
+// the possible themes
 export enum Theme
 {
 	Light= "light",

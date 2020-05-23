@@ -181,7 +181,7 @@ function GetChatInfoMessage(Data: any): ChatInfoMessage
 	(Data.Chatrooms as Array<any>).forEach(v =>{
 		let nUsers =  Array<Guid>();
 		(v.Users as Array<string>).forEach(v => nUsers.push(Guid.parse(v)));
-		nChatrooms.push({...v, ID: Guid.parse(v.ID), Users: nUsers});
+		nChatrooms.push({...v, ID: Guid.parse(v.ID), Users: nUsers, LastMessage: v.LastMessage ?? 1});
 	});
 	cIData.Chatrooms = nChatrooms;
 	// converts the ID of the current User
