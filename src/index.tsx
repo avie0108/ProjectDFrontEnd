@@ -7,6 +7,7 @@ import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
 import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 import { SettingsPanel, Theme} from "./components/Settings/Settings";
+import { RegisterPanel } from "./components/RegisterPanel/RegisterPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
 import * as Data from "./Data";
 import * as Settings from "./components/Settings/Settings";
@@ -26,11 +27,14 @@ class App extends React.Component<{},AppState>
 {
 
 	SettingsRef: React.RefObject<SettingsPanel>;
+	RegisterRef: React.RefObject<RegisterPanel>;
 
 	constructor(props: object)
 	{
 		super(props)
 		this.SettingsRef = React.createRef<SettingsPanel>();
+		this.RegisterRef = React.createRef<RegisterPanel>();
+
 		Settings.AddOnSettingChangedCallBack((s, v) => this.onSettingChanged(s, v))
 		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: Array<{ID: Guid, Name: string}>(), Theme: Settings.GetSetting("Theme")};
 	}
@@ -41,17 +45,20 @@ class App extends React.Component<{},AppState>
 			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
 			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			<SettingsPanel ref={this.SettingsRef}/>
+			<RegisterPanel ref={this.RegisterRef}/>
 			{/* Decides wether it should render feed or a chat. */}
 			{this.ChoosePanel() }
 		</div>
 	}
 
 	// handle what happens when a button in the side panel is clicked
-	SidePanelCallBack(id: Guid | "Feed" | "Settings", name?: string){
-		if(id !== "Settings")
+	SidePanelCallBack(id: Guid | "Feed" | "Settings" | "Register", name?: string){
+		if(id === "Feed")
 			this.setState({CurrentPanel: { ID: id, Name: name }});
-		else
+		else if (id === "Settings")
 			this.SettingsRef.current?.Show();
+		else if (id === "Register")
+			this.RegisterRef.current?.Show();
 	}
 	
 	/*

@@ -44,6 +44,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 
 	render()
 	{
+		//return () => console.log("Login pop-up");
 		return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
 			<div className="login-div">
 				{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}

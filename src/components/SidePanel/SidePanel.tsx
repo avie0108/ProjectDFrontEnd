@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
 
@@ -9,7 +9,7 @@ export interface SidePanelProps
 	// the function that is called when one of the buttons is pressed
 	// @param id: the id of the chat button that is pressed
 	// @param name?: the name of the chat button that is pressed
-	CallBack(id: Guid | "Feed" | "Settings", name?: string): void;
+	CallBack(id: Guid | "Feed" | "Settings" | "Register", name?: string): void;
 
 	// The chats this user is in
 	Chats: Array<{ID: Guid, Name: string}>;
@@ -31,6 +31,11 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 			{/* the button for settings*/}
 			<button onClick={() => this.props.CallBack("Settings")}>
 				<FontAwesomeIcon icon={faCog}/>
+			</button>
+			<hr/>
+			{/* the button for registration*/}
+			<button onClick={() => this.props.CallBack("Register")}>
+				<FontAwesomeIcon icon={faUser}/>
 			</button>
 		</div>
 	}
