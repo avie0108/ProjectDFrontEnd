@@ -41,7 +41,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
         category: this.CategoryRef.current?.value
       },
       "POST",
-      "http://192.168.2.15:12002/api/feedItem"
+      "http://localhost/api/feedItem"
     );
 
     this.PopupRef.current?.Hide();
@@ -51,7 +51,6 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   getFeedItems(l: number, o: number) {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res: string) => {
-      console.log(res);
       if(res)
       {
         var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
@@ -73,6 +72,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
   }
 
+  // sets the interval for getting feed items
   componentDidMount(){
     this.getFeedItems(7, this.state.pageNumber)
     setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)

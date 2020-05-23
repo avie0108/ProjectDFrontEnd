@@ -40,7 +40,9 @@ export class ChatPanel extends React.Component<ChatPanelProps, {}>
 // a basic message
 export interface Message
 {
+	// the user that sent the message
 	User: Guid;
+	// what the user sent
 	Text: string;
 }
 
