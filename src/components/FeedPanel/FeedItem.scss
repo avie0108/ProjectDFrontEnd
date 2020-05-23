@@ -36,8 +36,7 @@
 
 
 .feed-item {
-    background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 3) / 255));
-    border: 1px solid hsl($basehue,$basesaturation, percentage(($baselighgting) / 255));
+    border: 1px solid $darkBG;
     box-sizing: border-box;
     border-radius: 15px;
     padding: 10px;

@@ -61,6 +61,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     );
   }
 
+  // send the backend a request to delete this feed item
   deleteFeedItem() {
     sendAsJSON(
       {},
@@ -69,6 +70,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     );
   }
 
+  // gets this items category in dutch
   getDutchCategoryName() {
     switch (this.props.Category) {
       case "General":
