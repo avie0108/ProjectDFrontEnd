@@ -4,6 +4,7 @@ import './FeedItem.scss';
 import { sendAsJSON } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Server } from '../../Data';
 
 export interface FeedItemProps {
   // ID of the feed item
@@ -57,7 +58,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
         newCategory: this.CategoryRef.current?.value
       },
       "PATCH",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      `http://${Server}/api/feedItem?id=` + this.props.ID
     );
   }
 
@@ -66,7 +67,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     sendAsJSON(
       {},
       "DELETE",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      `http://${Server}/api/feedItem?id=` + this.props.ID
     );
   }
 

@@ -46,3 +46,6 @@ export function getLastMessage(chatroomID: Guid) { return LastMessage.get(chatro
 // gets the messages of a chatroom
 export function getMessages(chatroomID: Guid) { return Messages.get(chatroomID); }
 //#endregion
+
+// the server name
+export let Server: string = "192.168.1.105"

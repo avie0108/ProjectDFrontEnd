@@ -1,6 +1,7 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
+import { Server } from "../../Data";
 
 export interface LoginPanelProps{
 	// what happens when the user is logged in
@@ -41,7 +42,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 	componentDidMount()
 	{
 		let xhttp: XMLHttpRequest = new XMLHttpRequest();
-		xhttp.open("post", "http://localhost/api/login", true);
+		xhttp.open("post", `http://${Server}/api/login`, true);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		let json: string = JSON.stringify({});
 			
@@ -93,7 +94,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 			this.Sending = true;
 			// making the request that will be sent
 			let xhttp: XMLHttpRequest = new XMLHttpRequest();
-			xhttp.open("post", "http://localhost/api/login", true);
+			xhttp.open("post", `http://${Server}/api/login`, true);
 			xhttp.setRequestHeader("Content-type", "application/json");
 			let json: string = JSON.stringify({
 				Email: this.EmailRef.current?.value,

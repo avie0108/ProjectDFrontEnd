@@ -4,6 +4,7 @@ import "./FeedPanel.scss";
 import { sendAsJSON } from "../../ajax";
 import { sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
+import { Server } from "../../Data";
 
 export interface FeedPanelState {
   feedItems: Array<FeedItem>;
@@ -41,7 +42,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
         category: this.CategoryRef.current?.value
       },
       "POST",
-      "http://localhost/api/feedItem"
+      `http://${Server}/api/feedItem`
     );
 
     this.PopupRef.current?.Hide();
@@ -49,7 +50,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
   // Gets the results of the get request and puts them into the state to be rendered out on the screen
   getFeedItems(l: number, o: number) {
-    var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
+    var result: Promise<string> = sendGetRequest(`http://${Server}/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res: string) => {
       if(res)
       {
