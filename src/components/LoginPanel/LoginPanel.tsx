@@ -36,10 +36,28 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		this.state = {ErrorMessage:null};
 	}
 
-	// show the login pop-up
+	// checks if the session is correct and if so logs in
+	// else it asks the user to login
 	componentDidMount()
 	{
-		this.PopUpRef.current?.Show();
+		let xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("post", "http://localhost/api/login", true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		let json: string = JSON.stringify({});
+			
+		xhttp.withCredentials = true;
+		// handle the response of the request
+		xhttp.onloadend = () => {
+			this.Sending = false;
+			if(xhttp.status === 200 || xhttp.status === 204)
+			{
+				this.props.LogedIn();
+				return;
+			}
+			this.PopUpRef.current?.Show();
+		};
+		// send the request
+		xhttp.send(json);
 	}
 
 	render()
