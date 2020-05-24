@@ -1,9 +1,9 @@
 import React from "react";
 import { FeedItem, FeedItemProps } from "./FeedItem";
 import "./FeedPanel.scss";
-import { sendAsJSON } from "../../ajax";
-import { sendGetRequest } from "../../ajax";
+import { sendAsJSON, sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
+import { SearchBar } from "./SearchBar";
 
 export interface FeedPanelState {
   feedItems: Array<FeedItem>;
@@ -15,8 +15,9 @@ export interface FeedPanelState {
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
-  CategoryRef: React.RefObject<HTMLSelectElement>;
+  CategoryRef: React.RefObject<HTMLInputElement>;
   PopupRef: React.RefObject<PopUp>;
+  SeachBarRef: React.RefObject<SearchBar>
 
   constructor(props: {}) {
     super(props);
@@ -24,8 +25,9 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     //Creates a react reference for each feed item field in the form using this reference we can get the elements values
     this.InputRef = React.createRef<HTMLInputElement>();
     this.TextRef = React.createRef<HTMLTextAreaElement>();
-    this.CategoryRef = React.createRef<HTMLSelectElement>();
+    this.CategoryRef = React.createRef<HTMLInputElement>();
     this.PopupRef = React.createRef<PopUp>();
+    this.SeachBarRef = React.createRef<SearchBar>();
 
     this.state = {
       feedItems: Array<FeedItem>(),
@@ -90,6 +92,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           >
             Nieuw Feed Item
           </button>
+          <SearchBar ref={this.SeachBarRef} action= {this.SeachBarRef.current?.getSearchResult(7, this.state.pageNumber).then((res: string) => {console.log(res)})}/>
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (
               <FeedItem
@@ -133,7 +136,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
               list="datalist"
               placeholder="Selecteer een categorie"
               className="form-element"
-              ref={this.CategorieRef}
+              ref={this.CategoryRef}
               required
             />
             <datalist id="datalist">
@@ -143,7 +146,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
             </datalist>
 
 						<input
-							onClick={() => this.sentFeedItem()}
+							onClick={() => this.sendFeedItem()}
 							type="button"
 							value="aanmaken"
 							className="feed-button"
