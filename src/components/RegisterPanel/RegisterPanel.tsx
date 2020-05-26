@@ -83,17 +83,26 @@ export class RegisterPanel extends React.Component<{}, RegisterPanelState>
             // If a 2xx message is returned
             if (xhttp.status >= 200 && xhttp.status < 300)
             {
-			    this.setState({SuccessMessage: "De gebruiker is succesvol aangemaakt."});
+                this.setState({SuccessMessage: "De gebruiker met e-mailadres " + this.EmailRef.current?.value + " is succesvol aangemaakt."});
+                this.resetFields();
+
                 return;
             // If a 400 message is returned
             } else if (xhttp.status === 400) {
-			    this.setState({ErrorMessage: "De gebruiker kon niet worden aangemaakt."});
+                this.setState({ErrorMessage: "De gebruiker kon niet worden aangemaakt."});
+                
                 return;
             }
         }
 
         // Send the json
         xhttp.send(json);
+    }
+
+    resetFields() {
+        if (this.EmailRef.current) this.EmailRef.current.value = "";
+        if (this.PasswordRef.current) this.PasswordRef.current.value = "";
+        if (this.RepeatPasswordRef.current) this.RepeatPasswordRef.current.value = "";
     }
 
 	Show(){

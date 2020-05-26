@@ -45,16 +45,16 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 	render()
 	{
 		//return () => console.log("Login pop-up");
-		return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
+		return <PopUp Header="Inloggen" canClose={false} ref={this.PopUpRef}>
 			<div className="login-div">
 				{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
-				Email:<br/>
+				E-mailadres:<br/>
 				<input type="email" ref={this.EmailRef}/><br/>
 				Wachtwoord:<br/>
 				<input type="password" ref={this.PasswordRef}/><br/>
-				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
+				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">Ingelogd blijven</label>
 			</div>
-			<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
+			<input type="submit" value="Inloggen" onClick={()=> this.handleFormSubmit()}/>
 		</PopUp>
 	}
 
@@ -64,11 +64,11 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		// client side error checking
 		if(!LoginPanel.isEmail(this.EmailRef.current?.value ?? "") && this.EmailRef.current?.value !== "Administrator")
 		{
-			this.setState({ErrorMessage: "incorrect Email"});
+			this.setState({ErrorMessage: "Het e-mailadres is niet geldig."});
 			return;
 		}
 		if(this.PasswordRef.current?.value?.trim() === ""){
-			this.setState({ErrorMessage: "leeg Wachtwoord"});
+			this.setState({ErrorMessage: "U dient een wachtwoord in te vullen."});
 			return;
 		}
 		if(!this.Sending)
@@ -97,7 +97,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 				}
 				else if(xhttp.status === 401)
 				{
-					this.setState({ErrorMessage: "incorrect wachtwoord"});
+					this.setState({ErrorMessage: "Het ingevulde wachtwoord is niet correct."});
 				}
 				else
 				{
