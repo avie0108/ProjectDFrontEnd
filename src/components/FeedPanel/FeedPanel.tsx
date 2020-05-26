@@ -92,7 +92,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           >
             Nieuw Feed Item
           </button>
-          <SearchBar ref={this.SeachBarRef} action= {this.SeachBarRef.current?.getSearchResult(7, this.state.pageNumber).then((res: string) => {console.log(res)})}/>
+          <SearchBar ref={this.SeachBarRef} action= {()=>{this.SeachBarRef.current?.getSearchResult(7, this.state.pageNumber).then((res: string) => {console.log(res)})}}/>
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (
               <FeedItem

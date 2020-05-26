@@ -1,33 +1,45 @@
-import * as React from 'react';
-import { Component } from 'react';
+import * as React from "react";
 import { sendGetRequest } from "../../ajax";
- 
+import "./SearchBar.scss";
+
 export interface SearchBarProps {
-    action:any
+  action: any;
 }
- 
-export interface SearchBarState {
-    
-}
- 
+
+export interface SearchBarState {}
+
 export class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
-    constructor(props: SearchBarProps) {
-        super(props);
-        this.state = {};
-    }
+  inputRef: React.RefObject<HTMLInputElement>;
+  constructor(props: SearchBarProps) {
+    super(props);
 
-    getSearchResult(limit:number, offset:number):Promise<string>{
-        var searchString:string = (document.getElementsByClassName("search-bar-input") as any).value
-        return(sendGetRequest(`http://localhostapi/feedItem?searchString=${searchString}&limit=${limit}&offset=${offset}`))
-    }
+    this.inputRef = React.createRef<HTMLInputElement>();
 
-    render() { 
-        return (
-            <form action="#" onSubmit={this.props.action}>
-                <input type="text" placeholder="Search.." name="search" className="search-bar-input"/>
-                <button type="submit">Submit</button>
-            </form>
-          );
-    }
+    this.state = {};
+  }
+
+  getSearchResult(limit: number, offset: number): Promise<string> {
+    console.log(this.inputRef.current?.value);
+    return sendGetRequest(
+      `http://localhost/api/feedItem?searchString=${this.inputRef.current?.value}&limit=${limit}&offset=${offset}`
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        {/* iframe is zodat de form submit de pagina niet refreshed */}
+        <iframe title="formiframe" name="dummyframe" id="dummyframe"></iframe>
+        <form action="#" onSubmit={this.props.action} target="dummyframe">
+          <input
+            type="text"
+            placeholder="Search.."
+            name="search"
+            ref={this.inputRef}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    );
+  }
 }
- 
