@@ -1,0 +1,52 @@
+[data-theme="dark"]{
+    .status-bar {
+        background-color: #666666;
+    }
+}
+
+[data-theme="light"]{
+    .status-bar {
+        background-color: #DDDDDD;
+    }
+}
+
+.status-bar {
+    font-family: "Open Sans";
+    padding-left: 90px;
+    height: 75px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    margin-left: 10px;
+}
+
+.user-status {
+    margin-right: 33px;
+}
+
+.logged-in {
+    display: flex;
+
+    .logged-in-as {
+        margin-right: 10px;
+    }
+
+    .logout-button {
+        margin-left: 10px;
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}
+
+.login-button:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -52,13 +52,15 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
     result.then((res: string) => {
       if (res) {
-        var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
-        var feedItems: Array<FeedItem> = [];
-        feedItemArray.forEach(f => {
-          var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category })
-          feedItems.push(fItem);
-        });
-        this.setState({ feedItems: feedItems })
+        try {
+          var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
+          var feedItems: Array<FeedItem> = [];
+          feedItemArray.forEach(f => {
+            var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category, UserEmail: f.UserEmail })
+            feedItems.push(fItem);
+          });
+          this.setState({ feedItems: feedItems })
+        } catch {}
       }
     })
   }
@@ -74,14 +76,16 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   // sets the interval for getting feed items
   componentDidMount(){
     this.getFeedItems(7, this.state.pageNumber)
-    setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)
+    // setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)
   }
 
   render() {
     return (
       <div className="feed-panel">
         <div className="feed-items">
-          <h2>Feed Items</h2>
+          <div style={{display:"flex",justifyContent:"space-between"}}>
+            <h2>Feed Items</h2>
+          </div>
           <button
             onClick={() => this.PopupRef.current?.Show()}
             className="feed-button"
@@ -96,6 +100,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
                 Title={tag.props.Title}
                 Description={tag.props.Description}
                 Category={tag.props.Category}
+                UserEmail={tag.props.UserEmail}
               ></FeedItem>
             ))}
           </ul>

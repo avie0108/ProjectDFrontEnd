@@ -1,6 +1,7 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
+import { logOut } from "../../AccountUtils";
 
 export interface LoginPanelProps{
 	// what happens when the user is logged in
@@ -35,13 +36,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		this.Sending = false;
 		this.state = {ErrorMessage:null};
 	}
-
-	// show the login pop-up
-	componentDidMount()
-	{
-		this.PopUpRef.current?.Show();
-	}
-
+	
 	render()
 	{
 		//return () => console.log("Login pop-up");
@@ -58,6 +53,11 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		</PopUp>
 	}
 
+	// show the login pop-up
+	Show(){
+		this.PopUpRef.current?.Show();
+	}
+
 	// sends the data to the backend
 	handleFormSubmit()
 	{
@@ -71,6 +71,9 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 			this.setState({ErrorMessage: "U dient een wachtwoord in te vullen."});
 			return;
 		}
+		
+		logOut();
+
 		if(!this.Sending)
 		{
 			this.Sending = true;
@@ -93,6 +96,9 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 				{
 					this.PopUpRef.current?.Hide();
 					this.props.LogedIn();
+
+					window.location.reload(true);
+
 					return;
 				}
 				else if(xhttp.status === 401)

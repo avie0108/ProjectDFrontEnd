@@ -4,6 +4,7 @@ import './FeedItem.scss';
 import { sendAsJSON } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getLoggedInUser } from '../../AccountUtils';
 
 export interface FeedItemProps {
   // ID of the feed item
@@ -14,6 +15,8 @@ export interface FeedItemProps {
   Description: string;
   // Category of the feed item
   Category: string;
+  // The user of the user who sent the feed item
+  UserEmail: string;
 }
 
 // Feed items are posts a user can make
@@ -23,6 +26,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
   TextRef: React.RefObject<HTMLTextAreaElement>;
   CategoryRef: React.RefObject<HTMLSelectElement>;
   EditPopupRef: React.RefObject<PopUp>;
+  Email: string;
 
   constructor(props: FeedItemProps) {
     super(props);
@@ -34,6 +38,8 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
 
     // The edit pop up
     this.EditPopupRef = React.createRef<PopUp>();
+
+    this.Email = getLoggedInUser()["Email"];
   }
 
   // Shows the edit pop up
@@ -85,11 +91,16 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
   render() {
     return (
       <div className="feed-item">
+        {this.Email === this.props.UserEmail ? (
         <div className="feed-item-options">
-          <div onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
-          <div>&nbsp;</div>
-          <div onClick={() => this.showDeletePopup()}><FontAwesomeIcon icon={faTrashAlt} /></div>
+            <div>{this.props.UserEmail}</div>
+            <div>&nbsp;</div>
+            <div onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
+            <div>&nbsp;</div>
+            <div onClick={() => this.showDeletePopup()}><FontAwesomeIcon icon={faTrashAlt} /></div>
         </div>
+        ) : (<div className="feed-item-options"><div>{this.props.UserEmail}</div></div>)
+        }
         <div className="feed-item-text-container">
           <div className="feed-item-title">{this.props.Title}</div>
           <div className="feed-item-description">{this.props.Description}</div>

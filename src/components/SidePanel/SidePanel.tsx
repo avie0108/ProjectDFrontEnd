@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
+import { getLoggedInUser } from "../../AccountUtils";
 
 export interface SidePanelProps
 {
@@ -22,21 +23,24 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 	{
 		return <div className="sidenav">
 			{/* the button for the feed*/}
-			<button onClick={() => this.props.CallBack("Feed")}>
+			<button title="Home" onClick={() => this.props.CallBack("Feed")}>
 				<FontAwesomeIcon icon={faHome} size="2x"/>
 			</button>
 			<hr/>
 			{this.props.Chats.map(v => <SidePanelIcon ChatID={v.ID} ChatName={v.Name} CallBack={this.props.CallBack}/>)}
 			<hr/>
 			{/* the button for settings*/}
-			<button onClick={() => this.props.CallBack("Settings")}>
+			<button title="Instellingen" onClick={() => this.props.CallBack("Settings")}>
 				<FontAwesomeIcon icon={faCog}/>
 			</button>
 			<hr/>
-			{/* the button for registration*/}
-			<button onClick={() => this.props.CallBack("Register")}>
-				<FontAwesomeIcon icon={faUser}/>
-			</button>
+			{/* the button for registration (if admin)*/}
+			{getLoggedInUser()?.["PermissionLevel"] === 1 ? (
+				<button title="Gebruiker registreren" onClick={() => this.props.CallBack("Register")}>
+					<FontAwesomeIcon icon={faUser}/>
+				</button>
+			) : (<div></div>)}
+			<hr/>
 		</div>
 	}
 }

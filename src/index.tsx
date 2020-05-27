@@ -5,12 +5,12 @@ import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
-import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 import { SettingsPanel, Theme} from "./components/Settings/Settings";
 import { RegisterPanel } from "./components/RegisterPanel/RegisterPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
 import * as Data from "./Data";
 import * as Settings from "./components/Settings/Settings";
+import { StatusBar } from "./components/StatusBar/StatusBar";
 
 interface AppState
 {
@@ -25,13 +25,14 @@ interface AppState
 // The app
 class App extends React.Component<{},AppState>
 {
-
+	StatusBar: React.RefObject<StatusBar>;
 	SettingsRef: React.RefObject<SettingsPanel>;
 	RegisterRef: React.RefObject<RegisterPanel>;
 
 	constructor(props: object)
 	{
-		super(props)
+		super(props);
+		this.StatusBar = React.createRef<StatusBar>();
 		this.SettingsRef = React.createRef<SettingsPanel>();
 		this.RegisterRef = React.createRef<RegisterPanel>();
 
@@ -42,8 +43,9 @@ class App extends React.Component<{},AppState>
 	render()
 	{
 		return <div data-theme={this.state.Theme}>
+			<StatusBar LogedIn={() => this.onLogedIn()} ref={this.StatusBar}/>
+
 			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
-			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			<SettingsPanel ref={this.SettingsRef}/>
 			<RegisterPanel ref={this.RegisterRef}/>
 			{/* Decides wether it should render feed or a chat. */}
