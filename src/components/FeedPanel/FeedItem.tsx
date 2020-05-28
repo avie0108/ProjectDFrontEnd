@@ -63,7 +63,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
         newCategory: this.CategoryRef.current?.value
       },
       "PATCH",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      "http://localhost/api/feedItem?id=" + this.props.ID
     );
   }
 
@@ -72,7 +72,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     sendAsJSON(
       {},
       "DELETE",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      "http://localhost/api/feedItem?id=" + this.props.ID
     );
   }
 
