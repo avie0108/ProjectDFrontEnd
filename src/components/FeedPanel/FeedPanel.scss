@@ -45,10 +45,13 @@
 }
 
 .feed-panel {
+    color: white;
     box-sizing: border-box;
+	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
     display: flex;
     height: 100vh;
     padding-left: $sidepanelsize;
+    padding-right: 10px;
     font-family: $basefont;
 
 
@@ -86,6 +89,26 @@
             width: calc(50% - 15px);
             border-radius: 10px;
             border: 0;
+        }
+    }
+
+    #search-term-label {
+        margin-top: 10px;
+        margin-left: 5px;
+        font-size: 14px;
+        display: none;
+
+        #search-term {
+            font-style: italic;
+        }
+
+        #search-term-reset {
+            border: 2px solid #ACACAC;
+            border-radius: 7px;
+            background-color: #ACACAC;
+            margin-left: 15px;
+            padding: 0px 5px;
+            cursor: pointer;
         }
     }
 }

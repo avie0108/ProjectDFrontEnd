@@ -1,0 +1,23 @@
+@import "./../BasicValues.scss";
+
+iframe {
+    display: none;
+}
+
+.search-bar {
+    float: right;
+    margin-right: 10px;
+}
+
+.search-term-input {
+    padding: 10px;
+    background-color: #F1F1F1;
+    font-family: "Open Sans";
+}
+
+.search-submit {
+    padding: 8px 20px;
+    margin-left: 10px;
+    background-color: gainsboro;
+    font-family: "Open Sans";
+}

@@ -1,9 +1,9 @@
 import React from "react";
 import { FeedItem, FeedItemProps } from "./FeedItem";
 import "./FeedPanel.scss";
-import { sendAsJSON } from "../../ajax";
-import { sendGetRequest } from "../../ajax";
+import { sendAsJSON, sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
+import { SearchBar } from "./SearchBar";
 
 export interface FeedPanelState {
   feedItems: Array<FeedItem>;
@@ -11,11 +11,13 @@ export interface FeedPanelState {
 }
 
 // The feed panel is a container for feed items
+
 export class FeedPanel extends React.Component<{}, FeedPanelState> {
   InputRef: React.RefObject<HTMLInputElement>;
   TextRef: React.RefObject<HTMLTextAreaElement>;
   CategoryRef: React.RefObject<HTMLSelectElement>;
   PopupRef: React.RefObject<PopUp>;
+  SeachBarRef: React.RefObject<SearchBar>
 
   constructor(props: {}) {
     super(props);
@@ -25,6 +27,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.TextRef = React.createRef<HTMLTextAreaElement>();
     this.CategoryRef = React.createRef<HTMLSelectElement>();
     this.PopupRef = React.createRef<PopUp>();
+    this.SeachBarRef = React.createRef<SearchBar>();
 
     this.state = {
       feedItems: Array<FeedItem>(),
@@ -48,8 +51,12 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   }
 
   // Gets the results of the get request and puts them into the state to be rendered out on the screen
-  getFeedItems(l: number, o: number) {
-    var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?limit=${l.toString()}&offset=${o.toString()}`);
+  getFeedItems(limit: number, offset: number, searchString: any) {
+    // If the searchString has no value, assign the empty string.
+    searchString = !searchString ? "" : searchString;
+
+    var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?search_string=${searchString.toString()}&limit=${limit.toString()}&offset=${offset.toString()}`);
+
     result.then((res: string) => {
       if (res) {
         try {
@@ -59,23 +66,43 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
             var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category, UserEmail: f.UserEmail })
             feedItems.push(fItem);
           });
-          this.setState({ feedItems: feedItems })
+          this.setState({ feedItems: feedItems });
+          this.setSearchTerm(searchString);
         } catch {}
       }
     })
   }
 
-  //Keeps track of the current page of feedItems the customers is viewing 
+  setSearchTerm(searchString: string) {
+    if (!searchString) {
+      document.getElementById("search-term-label")!.style.display = "none";
+      return;
+    } else {
+      document.getElementById("search-term-label")!.style.display = "block";
+    }
+
+    document.getElementById("search-term")!.innerText = searchString;
+  }
+
+  resetSearch() {
+    this.getFeedItems(7, this.state.pageNumber, "");
+
+    if (this.SeachBarRef.current?.InputRef && this.SeachBarRef.current!.InputRef.current?.value) {
+      this.SeachBarRef.current!.InputRef.current!.value = "";
+    }
+  }
+
+  //gets the items of the next or previous page
   movePage(NextOrPrev: 'prev' | 'next') {
 
     var x:number = NextOrPrev === 'prev' ? -7 : 7
-    this.setState({ pageNumber: this.state.pageNumber + x }, () => {this.getFeedItems(7, this.state.pageNumber)});
+    this.setState({ pageNumber: this.state.pageNumber + x }, () => {this.getFeedItems(7, this.state.pageNumber, "")});
 
   }
 
   // sets the interval for getting feed items
   componentDidMount(){
-    this.getFeedItems(7, this.state.pageNumber)
+    this.getFeedItems(7, this.state.pageNumber, "");
     // setInterval(() => {this.getFeedItems(7, this.state.pageNumber)}, 5000)
   }
 
@@ -92,6 +119,11 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           >
             Nieuw Feed Item
           </button>
+          <SearchBar ref={this.SeachBarRef} action= {()=>{this.getFeedItems(7, this.state.pageNumber, this.SeachBarRef.current?.InputRef.current?.value);}}/>
+          <div id="search-term-label">
+            Feed items met term <span id="search-term"></span>
+            <span title="Zoekterm resetten" id="search-term-reset" onClick={() => this.resetSearch()}>Reset ❌</span>
+          </div>
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (
               <FeedItem
