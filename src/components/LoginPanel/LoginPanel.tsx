@@ -1,7 +1,7 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
-import { logOut } from "../../AccountUtils";
+import { logOut, updateLoggedInUser } from "../../AccountUtils";
 
 export interface LoginPanelProps{
 	// what happens when the user is logged in
@@ -96,6 +96,8 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 				{
 					this.PopUpRef.current?.Hide();
 					this.props.LogedIn();
+
+					updateLoggedInUser();
 
 					window.location.reload(true);
 

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
-import { getLoggedInUser } from "../../AccountUtils";
+import { loggedInUser } from "../../AccountUtils";
 
 export interface SidePanelProps
 {
@@ -35,7 +35,7 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 			</button>
 			<hr/>
 			{/* the button for registration (if admin)*/}
-			{getLoggedInUser()?.["PermissionLevel"] === 1 ? (
+			{loggedInUser?.["PermissionLevel"] === 1 ? (
 				<button title="Gebruiker registreren" onClick={() => this.props.CallBack("Register")}>
 					<FontAwesomeIcon icon={faUser}/>
 				</button>
