@@ -189,9 +189,10 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 			break;
 		case "ChatHistory":
 			js.Data.ChatroomID = (message.Data as SentChatHistory).ChatroomID.toString();
+			break;
 		case "DeleteChatroom":
 			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
-
+			break;
 	}
 	return JSON.stringify(js);
 }
