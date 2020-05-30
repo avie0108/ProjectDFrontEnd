@@ -13,7 +13,8 @@ export interface SocketJsonMessage
 // the commands available to us
 export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage";
 // the types that data can be in a socket message
-export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory | Array<ChatMessageMessage>;
+export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory
+| CreateChatroom | DeleteChatroom | Array<ChatMessageMessage>;
 
 // the message that the backend sends to update chat info
 export interface ChatInfoMessage
@@ -47,11 +48,23 @@ export interface ChatMessageMessage
 	Text: string;
 };
 
+// the message that will be used to create a new chatroom
+export interface CreateChatroom
+{
+	Name: string;
+	Private: boolean;
+}
+
+export interface DeleteChatroom
+{
+	ChatroomID: Guid;
+}
+
 // a basic chatroom
 export interface Chatroom
 {
 	Name: string;
-	Private: false;
+	Private: boolean;
 	ID: Guid;
 	LastMessage: number | null;
 	Users: Array<Guid>;
@@ -140,6 +153,19 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 				(real.Data as ChatMessageMessage).User = Guid.parse(json.Data.User);
 				(real.Data as ChatMessageMessage).Chatroom = Guid.parse(json.Data.Chatroom);
 				(real.Data as ChatMessageMessage).Date = new Date(json.Data.Date);
+				break;
+			case MessageType.ChatroomCreated:
+				(real.Data as Chatroom).ID = Guid.parse(json.Data.ID);
+				let nUsers =  Array<Guid>();
+				(json.Data.Users as Array<string>).forEach(v => nUsers.push(Guid.parse(v)));
+				(real.Data as Chatroom).Users = nUsers;
+				break;
+			case MessageType.ChatroomDeleted:
+				console.log(Guid.parse(json.Data));
+				let x: Guid = Guid.parse(json.Data.replace(/\"/g, ''));
+				console.log(x);
+				(real.Data as DeleteChatroom).ChatroomID = Guid.parse(x.toString());
+				break;
 		}
 	else
 		switch(real.Command)
@@ -166,6 +192,8 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 			break;
 		case "ChatHistory":
 			js.Data.ChatroomID = (message.Data as SentChatHistory).ChatroomID.toString();
+		case "DeleteChatroom":
+			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
 
 	}
 	return JSON.stringify(js);

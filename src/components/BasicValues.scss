@@ -19,12 +19,15 @@ $darkPlaceHolder: $darkBG6;
 
 //light mode
 
-$lightBG:  hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 0) / 255));
-$lightBG2: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * .5) / 255));
-$lightBG3: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 1) / 255));
-$lightBG4: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 1.5) / 255));
-$lightBG5: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 2) / 255));
-$lightBG6: hsl($basehue, $basesaturation, 100% - percentage(($baselighgting * 2.5) / 255));
+$lightSat: $basesaturation;
+$lightSat3: $basesaturation + 10%;
+
+$lightBG:  hsl($basehue, $lightSat, 100% - percentage(($baselighgting * 0) / 255));
+$lightBG2: hsl($basehue, $lightSat, 100% - percentage(($baselighgting * .5) / 255));
+$lightBG3: hsl($basehue, $lightSat3, 100% - percentage(($baselighgting * 1) / 255));
+$lightBG4: hsl($basehue, $lightSat, 100% - percentage(($baselighgting * 1.5) / 255));
+$lightBG5: hsl($basehue, $lightSat, 100% - percentage(($baselighgting * 2) / 255));
+$lightBG6: hsl($basehue, $lightSat, 100% - percentage(($baselighgting * 2.5) / 255));
 
 $lightColor: #000;
 $lightPlaceHolder: $darkBG3;
