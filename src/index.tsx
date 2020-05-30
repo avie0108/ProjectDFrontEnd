@@ -83,9 +83,9 @@ class App extends React.Component<{},AppState>
 	onSocketMessage(soc: WebSocket, ev: MessageEvent)
 	{
 		let message: Socket.SocketJsonMessage = Socket.GetJSONMessage(ev.data);
+		console.log(message);
 		if(message.Command == null)
 		{
-
 			switch (message.Type) 
 			{
 			case Socket.MessageType.ChatInfo:
@@ -111,7 +111,7 @@ class App extends React.Component<{},AppState>
 	onChatroomDeleted(data: Socket.DeleteChatroom)
 	{
 		Data.deleteChatroom(data.ChatroomID);
-		let i = this.state.SidePanelChats.findIndex(x=> x.ID == data.ChatroomID);
+		let i = this.state.SidePanelChats.findIndex(x=> x.ID.equals(data.ChatroomID));
 		if( i < 0)
 			return;
 		console.log("kill: " + i)

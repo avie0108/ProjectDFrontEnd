@@ -50,7 +50,7 @@ export function getChatrooms() { return Chatrooms; }
 export function getChatroom(ID: Guid) { return Chatrooms.find(x=> x.ID.equals(ID)); }
 
 export function deleteChatroom(ID: Guid) {
-	let i = Chatrooms.findIndex(x=> x.ID == ID);
+	let i = Chatrooms.findIndex(x=> x.ID.equals(ID));
 	if( i > -1)
 		Chatrooms.splice(i, 1);
 }

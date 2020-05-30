@@ -161,10 +161,7 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 				(real.Data as Chatroom).Users = nUsers;
 				break;
 			case MessageType.ChatroomDeleted:
-				console.log(Guid.parse(json.Data));
-				let x: Guid = Guid.parse(json.Data.replace(/\"/g, ''));
-				console.log(x);
-				(real.Data as DeleteChatroom).ChatroomID = Guid.parse(x.toString());
+				real.Data = { ChatroomID: Guid.parse(json.Data)};
 				break;
 		}
 	else
