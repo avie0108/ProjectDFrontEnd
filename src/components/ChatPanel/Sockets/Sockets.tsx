@@ -1,4 +1,5 @@
 import { SocketJsonMessage, CreateJSONMessage} from "./SocketDataTypes";
+import { Server } from "../../../Data";
 
 // the websocket used for communication
 let Socket: WebSocket;
@@ -14,7 +15,7 @@ export async function Init()
 {
 	if(!Initialized)
 	{
-		Socket = new WebSocket("ws://localhost/chat");
+		Socket = new WebSocket(`ws://${Server}/chat`);
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;

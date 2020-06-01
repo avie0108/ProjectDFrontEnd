@@ -2,6 +2,7 @@ import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
 import { logOut, updateLoggedInUser } from "../../AccountUtils";
+import { Server } from "../../Data";
 
 export interface LoginPanelProps{
 	// what happens when the user is logged in
@@ -36,7 +37,31 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		this.Sending = false;
 		this.state = {ErrorMessage:null};
 	}
-	
+
+	// checks if the session is correct and if so logs in
+	// else it asks the user to login
+	componentDidMount()
+	{
+		let xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("post", `http://${Server}/api/login`, true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		let json: string = JSON.stringify({});
+			
+		xhttp.withCredentials = true;
+		// handle the response of the request
+		xhttp.onloadend = () => {
+			this.Sending = false;
+			if(xhttp.status === 200 || xhttp.status === 204)
+			{
+				this.props.LogedIn();
+				return;
+			}
+			this.PopUpRef.current?.Show();
+		};
+		// send the request
+		xhttp.send(json);
+	}
+
 	render()
 	{
 		//return () => console.log("Login pop-up");
@@ -79,7 +104,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 			this.Sending = true;
 			// making the request that will be sent
 			let xhttp: XMLHttpRequest = new XMLHttpRequest();
-			xhttp.open("post", "http://localhost/api/login", true);
+			xhttp.open("post", `http://${Server}/api/login`, true);
 			xhttp.setRequestHeader("Content-type", "application/json");
 			let json: string = JSON.stringify({
 				Email: this.EmailRef.current?.value,
