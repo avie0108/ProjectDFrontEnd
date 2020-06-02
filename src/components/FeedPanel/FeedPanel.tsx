@@ -5,6 +5,7 @@ import { sendAsJSON, sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { SearchBar } from "./SearchBar";
 
+
 export interface FeedPanelState {
   feedItems: Array<FeedItem>;
   pageNumber: number;
@@ -17,7 +18,8 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   TextRef: React.RefObject<HTMLTextAreaElement>;
   CategoryRef: React.RefObject<HTMLSelectElement>;
   PopupRef: React.RefObject<PopUp>;
-  SeachBarRef: React.RefObject<SearchBar>
+  SeachBarRef: React.RefObject<SearchBar>;
+  FilterBarRef: React.RefObject<HTMLSelectElement>;
 
   constructor(props: {}) {
     super(props);
@@ -28,6 +30,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.CategoryRef = React.createRef<HTMLSelectElement>();
     this.PopupRef = React.createRef<PopUp>();
     this.SeachBarRef = React.createRef<SearchBar>();
+    this.FilterBarRef = React.createRef<HTMLSelectElement>();
 
     this.state = {
       feedItems: Array<FeedItem>(),
@@ -49,6 +52,25 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
     this.PopupRef.current?.Hide();
   }
+
+  getFilterResult(){
+    if(this.FilterBarRef.current?.value != ""){
+      var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?category=${this.FilterBarRef.current?.value}&limit=7&offset=${this.state.pageNumber}`);
+      result.then((res: string) => {
+        if (res) {
+          try {
+            var feedItemArray: Array<FeedItemProps> = JSON.parse(res);
+            var feedItems: Array<FeedItem> = [];
+            feedItemArray.forEach(f => {
+              var fItem: FeedItem = new FeedItem({ ID: f.ID, Title: f.Title, Description: f.Description, Category: f.Category, UserEmail: f.UserEmail })
+              feedItems.push(fItem);
+            });
+            this.setState({ feedItems: feedItems });
+          } catch {}
+      }
+    })
+  }
+}
 
   // Gets the results of the get request and puts them into the state to be rendered out on the screen
   getFeedItems(limit: number, offset: number, searchString: any) {
@@ -119,7 +141,15 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           >
             Nieuw Feed Item
           </button>
+          
           <SearchBar ref={this.SeachBarRef} action= {()=>{this.getFeedItems(7, this.state.pageNumber, this.SeachBarRef.current?.InputRef.current?.value);}}/>
+          <select id="category" className="form-element" required ref={this.FilterBarRef}>
+            <option value="" selected disabled>Filter op categorie</option>
+            <option value="General">Algemeen</option>
+            <option value="Personal">Persoonlijk</option>
+            <option value="Note">Opmerking</option>
+          </select>
+          <button className="search-submit" onClick={() => {this.getFilterResult()}}>Zoeken</button>
           <div id="search-term-label">
             Feed items met term <span id="search-term"></span>
             <span title="Zoekterm resetten" id="search-term-reset" onClick={() => this.resetSearch()}>Reset ❌</span>
