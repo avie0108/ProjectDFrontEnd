@@ -1,3 +1,5 @@
+export var loggedInUser = getLoggedInUser();
+
 // Gets the currently logged in user, or null if no user is logged in
 export function getLoggedInUser() : any {
     let xhttp: XMLHttpRequest = new XMLHttpRequest();
@@ -12,10 +14,16 @@ export function getLoggedInUser() : any {
     }
 }
 
+export function updateLoggedInUser() {
+    loggedInUser = getLoggedInUser();
+}
+
 // Logs out the currently logged in user
 export function logOut() {
     let xhttp: XMLHttpRequest = new XMLHttpRequest();
     xhttp.open("DELETE", "http://localhost/api/login", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send();
+
+    updateLoggedInUser();
 }

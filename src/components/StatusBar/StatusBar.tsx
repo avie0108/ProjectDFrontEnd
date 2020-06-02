@@ -1,6 +1,6 @@
 import React from "react";
 import "./StatusBar.scss";
-import { getLoggedInUser } from "../../AccountUtils";
+import { loggedInUser } from "../../AccountUtils";
 import { LoginPanel } from "../LoginPanel/LoginPanel";
 import { logOut } from "../../AccountUtils";
 
@@ -20,7 +20,7 @@ export class StatusBar extends React.Component<StatusBarProps, {}> {
         super(props);
 
         this.LoginRef = React.createRef<LoginPanel>();
-        this.User = getLoggedInUser();
+        this.User = loggedInUser;
     }
 
     render() {

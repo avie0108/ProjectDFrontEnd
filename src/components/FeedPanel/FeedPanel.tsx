@@ -4,6 +4,7 @@ import "./FeedPanel.scss";
 import { sendAsJSON, sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { SearchBar } from "./SearchBar";
+import { Server } from "../../Data";
 
 
 export interface FeedPanelState {
@@ -47,7 +48,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
         category: this.CategoryRef.current?.value
       },
       "POST",
-      "http://localhost/api/feedItem"
+      `http://${Server}/api/feedItem`
     );
 
     this.PopupRef.current?.Hide();
@@ -77,7 +78,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     // If the searchString has no value, assign the empty string.
     searchString = !searchString ? "" : searchString;
 
-    var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?search_string=${searchString.toString()}&limit=${limit.toString()}&offset=${offset.toString()}`);
+    var result: Promise<string> = sendGetRequest(`http://${Server}/api/feedItem?search_string=${searchString.toString()}&limit=${limit.toString()}&offset=${offset.toString()}`);
 
     result.then((res: string) => {
       if (res) {
