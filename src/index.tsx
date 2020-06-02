@@ -5,6 +5,7 @@ import { ChatPanel, Message } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
+import { LoginPanel } from "./components/LoginPanel/LoginPanel";
 import { SettingsPanel, Theme} from "./components/Settings/Settings";
 import { AdminPanel } from "./components/AdminPanel/AdminPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
@@ -45,6 +46,7 @@ class App extends React.Component<{},AppState>
 			<StatusBar LogedIn={() => this.onLogedIn()} ref={this.StatusBar}/>
 
 			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
+			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			<SettingsPanel ref={this.SettingsRef}/>
 			{Data.getCurrentUser()?.PermissionLevel ? <AdminPanel ref={this.AdminRef}/> : null }
 			{/* Decides wether it should render feed or a chat. */}
@@ -119,6 +121,16 @@ class App extends React.Component<{},AppState>
 		if(Data.getChatrooms().findIndex(x => x.ID.equals(data.ID)) > -1)
 		{
 			Data.updateChatroom(data);
+
+			let i = this.state.SidePanelChats.findIndex(x=> x.ID.equals(data.ID));
+			console.log(i);
+			if(i > -1)
+			{
+				//eslint-disable-next-line
+				this.state.SidePanelChats[i].Name = data.Name;
+				this.forceUpdate();
+			}
+
 			this.AdminRef.current?.forceUpdate();
 		}	
 		else

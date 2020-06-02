@@ -4,6 +4,7 @@ import { faHome, faCog, faUser, faPlus } from '@fortawesome/free-solid-svg-icons
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
 import { loggedInUser } from "../../AccountUtils";
+import * as Data from "../../Data";
 
 export interface SidePanelProps
 {
@@ -30,7 +31,7 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 			{this.props.Chats.map(v => <SidePanelIcon ChatID={v.ID} ChatName={v.Name} CallBack={this.props.CallBack}/>)}
 			<hr/>
 			{/* the button for settings*/}
-			{loggedInUser?.PermissionLevel ?
+			{Data.getCurrentUser()?.PermissionLevel ?
 			<button onClick={() => this.props.CallBack("Admin")}>
 				<FontAwesomeIcon icon={faPlus}/>
 			</button> : null}
