@@ -19,7 +19,7 @@ export async function Init()
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;
-		AddOnMessageCallBack((s, ev) => console.log(ev.data));
+		Socket.onerror = () => {Terminate(); Init();};
 	}
 }
 
@@ -40,6 +40,7 @@ export function RemoveOnMessageCallBack(callBack: ((sock: WebSocket, ev: Message
 // calls all the functions connected with this event
 function OnMessage(this: WebSocket, ev: MessageEvent): any
 {
+	console.log(ev.data);
 	OnMessageCallBacks.forEach(value =>{
 		value(this, ev);
 	});

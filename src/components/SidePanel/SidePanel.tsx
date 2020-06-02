@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCog, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCog, faUser, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
 import { loggedInUser } from "../../AccountUtils";
@@ -10,7 +10,7 @@ export interface SidePanelProps
 	// the function that is called when one of the buttons is pressed
 	// @param id: the id of the chat button that is pressed
 	// @param name?: the name of the chat button that is pressed
-	CallBack(id: Guid | "Feed" | "Settings" | "Register", name?: string): void;
+	CallBack(id: Guid | "Feed" | "Settings" | "Admin", name?: string): void;
 
 	// The chats this user is in
 	Chats: Array<{ID: Guid, Name: string}>;
@@ -30,16 +30,13 @@ export class SidePanel extends React.Component<SidePanelProps,{}>
 			{this.props.Chats.map(v => <SidePanelIcon ChatID={v.ID} ChatName={v.Name} CallBack={this.props.CallBack}/>)}
 			<hr/>
 			{/* the button for settings*/}
-			<button title="Instellingen" onClick={() => this.props.CallBack("Settings")}>
+			{loggedInUser?.PermissionLevel ?
+			<button onClick={() => this.props.CallBack("Admin")}>
+				<FontAwesomeIcon icon={faPlus}/>
+			</button> : null}
+			<button onClick={() => this.props.CallBack("Settings")}>
 				<FontAwesomeIcon icon={faCog}/>
 			</button>
-			<hr/>
-			{/* the button for registration (if admin)*/}
-			{loggedInUser?.["PermissionLevel"] === 1 ? (
-				<button title="Gebruiker registreren" onClick={() => this.props.CallBack("Register")}>
-					<FontAwesomeIcon icon={faUser}/>
-				</button>
-			) : (<div></div>)}
 			<hr/>
 		</div>
 	}
@@ -77,7 +74,7 @@ class SidePanelIcon extends React.Component<SidePanelIconProps,SidePanelIconStat
 	{
 		return <button onClick={() => this.props.CallBack(this.props.ChatID, this.props.ChatName)}>
 			{/* gets the chat icon from the server*/}
-			{ this.state.Error ? this.props.ChatName[0] : <img title={this.props.ChatName} alt={this.props.ChatName[0]} src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false} onError={() => this.setState({Error: true})}/>}
+			{ this.state.Error ? this.props.ChatName[0] : <img title={this.props.ChatName} alt="" src={"https://stud.hosted.hr.nl/0958956/ProjectD/Chats/" + this.props.ChatID + "/Icon.png"} draggable={false} onError={() => this.setState({Error: true})}/>}
 		</button>
 	}
 }
