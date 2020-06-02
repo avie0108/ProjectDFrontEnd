@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 
-import { ChatPanel } from "./components/ChatPanel/ChatPanel";
+import { ChatPanel, Message } from "./components/ChatPanel/ChatPanel";
 import { SidePanel } from "./components/SidePanel/SidePanel";
 import { FeedPanel } from "./components/FeedPanel/FeedPanel";
 import { Guid } from "guid-typescript";
@@ -84,7 +84,7 @@ class App extends React.Component<{},AppState>
 	{
 		let message: Socket.SocketJsonMessage = Socket.GetJSONMessage(ev.data);
 		console.log(message);
-		if(message.Command == null)
+		if(message.Command === null)
 		{
 			switch (message.Type) 
 			{
@@ -97,15 +97,30 @@ class App extends React.Component<{},AppState>
 			case Socket.MessageType.ChatroomDeleted:
 				this.onChatroomDeleted(message.Data as Socket.DeleteChatroom);
 				break;
+			case Socket.MessageType.ChatroomUpdated:
+				this.onChatroomUpdated(message.Data as Socket.Chatroom);
 			}
 		}
 	}
 
 	onChatroomCreated(data: Socket.Chatroom)
 	{
-		Data.addChatroom(data)
+		Data.addChatroom(data);
+		Data.setLastMessage(data.ID, data.LastMessage ?? 0);
+		Data.setMessages(data.ID, new Array<Message>());
 		this.state.SidePanelChats.push({ID: data.ID, Name: data.Name});
 		this.forceUpdate();
+	}
+
+	onChatroomUpdated(data: Socket.Chatroom)
+	{
+		if(Data.getChatrooms().findIndex(x => x.ID.equals(data.ID)) > -1)
+		{
+			Data.updateChatroom(data);
+			this.AdminRef.current?.forceUpdate();
+		}	
+		else
+			this.onChatroomCreated(data);
 	}
 
 	onChatroomDeleted(data: Socket.DeleteChatroom)
@@ -113,9 +128,10 @@ class App extends React.Component<{},AppState>
 		Data.deleteChatroom(data.ChatroomID);
 		let i = this.state.SidePanelChats.findIndex(x=> x.ID.equals(data.ChatroomID));
 		if( i < 0)
-			return;
-		console.log("kill: " + i)
+		return;
 		this.state.SidePanelChats.splice(i, 1);
+		if(this.state.CurrentPanel.ID !== "Feed" && this.state.CurrentPanel.ID.equals(data.ChatroomID))
+			this.setState({...this.state, CurrentPanel: {ID: "Feed"}})
 		this.forceUpdate();
 	}
 

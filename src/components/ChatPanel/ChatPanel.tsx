@@ -44,6 +44,8 @@ export interface Message
 	User: Guid;
 	// what the user sent
 	Text: string;
+	// when the user sent the message
+	Date: Date
 }
 
 interface ChatProps
@@ -63,13 +65,16 @@ class Chat extends React.Component<ChatProps, ChatState>
 {
 	messageCallBack: (sock: WebSocket, ev: MessageEvent) => any;
 
+	messagesEnd: HTMLDivElement | null;
+
 	constructor(props: Readonly<ChatProps>)
 	{
 		super(props);
+		this.messagesEnd = null;
 		this.messageCallBack = (soc, ev) => this.OnMessageCallBack(ev.data);
 		Sockets.AddOnMessageCallBack(this.messageCallBack);
 		let messages = Data.getMessages(props.ChatId);
-		console.log()
+		console.log(messages)
 		if(messages === undefined)
 		{
 			Sockets.Send({
@@ -81,23 +86,55 @@ class Chat extends React.Component<ChatProps, ChatState>
 					Amount: 50
 				}
 			});
-			this.state = {Messages: Array<Message>()};
+			this.state ={Messages: Array<Message>()};
 		}
 		else
-		{
 			this.state = {Messages: messages};
+	}
+
+	componentWillReceiveProps(props : Readonly<ChatProps>)
+	{
+		this.setMessages(props.ChatId);
+	}
+
+	setMessages(ID: Guid)
+	{
+		let messages = Data.getMessages(ID);
+		console.log(messages)
+		if(messages === undefined)
+		{
+			Sockets.Send({
+				MessageID: Guid.create(),
+				Command: "ChatHistory",
+				Data: {
+					ChatroomID: ID,
+					Start: Data.getLastMessage(ID) ?? 1,
+					Amount: 50
+				}
+			});
+			this.setState({Messages: Array<Message>()});
 		}
+		else
+			this.setState({Messages: messages});
 	}
 
 	componentWillUnmount(){
 		Sockets.RemoveOnMessageCallBack(this.messageCallBack);
 	}
 
+	componentDidMount()
+	{
+		if(this.messagesEnd === null)
+			return;
+		this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
+	}
+
 	render()
 	{
 		return <div className="chat">
-			<div className="messages">
-				{this.state.Messages.map(value => <ChatMessage Message = {value} />)}
+			<div className="messages" ref={(el) => { this.messagesEnd = el; }}>
+				{this.state.Messages.map(value => <ChatMessage Message = {value}/>)}
+				<div style={{ float:"left", clear: "both" }}  > </div>
 			</div>
 		</div>
 	}
@@ -119,15 +156,24 @@ class Chat extends React.Component<ChatProps, ChatState>
 				if(data[0].Chatroom.equals(this.props.ChatId))
 				{
 					let messages: Array<Message> = Array<Message>();
-					data.forEach(x => messages.push({User: x.User, Text: x.Text}))
+					data.forEach(x => messages.push({User: x.User, Text: x.Text, Date: x.Date}))
 					Data.setMessages(this.props.ChatId, messages);
 					this.setState({Messages: messages});
 				}
 		}
-		else if(Message.Type === Sockets.MessageType.ChatMessage && (Message.Data as Sockets.ChatMessageMessage).Chatroom.equals(this.props.ChatId))
+		else if(Message.Type === Sockets.MessageType.ChatMessage && Message.Command === null)
 		{
 			let data = Message.Data as Sockets.ChatMessageMessage;
-			this.AddMessage({ User: data.User, Text: data.Text});
+			if(data.Chatroom.equals(this.props.ChatId))
+			{
+				this.AddMessage({ User: data.User, Text: data.Text, Date: data.Date});
+				if(this.messagesEnd === null)
+					return;
+				this.messagesEnd.scrollTop = this.messagesEnd.scrollHeight;
+				console.log(this.messagesEnd.scrollTop, this.messagesEnd.scrollHeight)
+			}
+			else
+				Data.setLastMessage(data.Chatroom, data.ID);
 		}
 	}
 }

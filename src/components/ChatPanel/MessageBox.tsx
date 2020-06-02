@@ -19,7 +19,7 @@ export class MessageBox extends React.Component<MessageBoxProps,{}>
 	render()
 	{
 		return <div className="messagebox">
-			<input type="text" placeholder={"stuur een bericht naar " + this.props.Name} ref={this.InputRef}/>
+			<input type="text" placeholder={"stuur een bericht naar " + this.props.Name} ref={this.InputRef} onKeyDown={(e) => {if(e.key === "Enter") this.SendMessage()}}/>
 			<input type="button" value="&#xf061;" onClick={() => this.SendMessage()}/>
 		</div>
 	}

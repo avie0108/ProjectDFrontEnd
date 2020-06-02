@@ -24,7 +24,15 @@ export function getUsers() { return Users; }
 export function getCurrentUser() { return CurrentUser }
 
 // gets a user based on his guid
-export function getUser(user: Guid) {return Users.find(x => x.ID.equals(user));}
+export function getUser(user: Guid) { return Users.find(x => x.ID.equals(user)); }
+
+// removes a user
+export function removeUser(user: Guid)
+{
+	let i = Users.findIndex(x=> x.ID.equals(user));
+	if( i > -1)
+		Users.splice(i, 1);
+}
 
 //#endregion
 
@@ -49,7 +57,19 @@ export function getChatrooms() { return Chatrooms; }
 // gets the known chatroom's
 export function getChatroom(ID: Guid) { return Chatrooms.find(x=> x.ID.equals(ID)); }
 
-export function deleteChatroom(ID: Guid) {
+export function updateChatroom(chatroom: Chatroom)
+{
+	console.log(Chatrooms);
+	let i = Chatrooms.findIndex(x => x.ID.equals(chatroom.ID));
+	if(i > -1)
+		Chatrooms[i] = chatroom;
+	else
+	Chatrooms.push(chatroom);
+}
+
+// remove the chatroom's
+export function deleteChatroom(ID: Guid) 
+{
 	let i = Chatrooms.findIndex(x=> x.ID.equals(ID));
 	if( i > -1)
 		Chatrooms.splice(i, 1);

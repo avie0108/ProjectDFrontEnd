@@ -65,7 +65,8 @@
 	}
 	
 	.user-div{
-		max-height: 45%;
+		height: calc((100vh - #{$basesize * 2}) * .45);
+		margin-bottom: 30px;
 		.users{
 			width: calc(100% - 40px);
 			border: 1px solid $darkBG5;

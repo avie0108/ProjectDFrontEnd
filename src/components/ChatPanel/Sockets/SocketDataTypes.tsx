@@ -11,10 +11,10 @@ export interface SocketJsonMessage
 };
 
 // the commands available to us
-export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage";
+export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage" | "ChangeAccess";
 // the types that data can be in a socket message
 export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory
-| CreateChatroom | DeleteChatroom | Array<ChatMessageMessage>;
+| CreateChatroom | DeleteChatroom | ChangeAccess | Array<ChatMessageMessage>;
 
 // the message that the backend sends to update chat info
 export interface ChatInfoMessage
@@ -53,6 +53,13 @@ export interface CreateChatroom
 {
 	Name: string;
 	Private: boolean;
+}
+
+export interface ChangeAccess
+{
+	ChatroomID: Guid;
+	UserID: Guid;
+	AllowAccess: boolean;
 }
 
 export interface DeleteChatroom
@@ -154,6 +161,7 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 				(real.Data as ChatMessageMessage).Chatroom = Guid.parse(json.Data.Chatroom);
 				(real.Data as ChatMessageMessage).Date = new Date(json.Data.Date);
 				break;
+			case MessageType.ChatroomUpdated:
 			case MessageType.ChatroomCreated:
 				(real.Data as Chatroom).ID = Guid.parse(json.Data.ID);
 				let nUsers =  Array<Guid>();
@@ -161,7 +169,7 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 				(real.Data as Chatroom).Users = nUsers;
 				break;
 			case MessageType.ChatroomDeleted:
-				real.Data = { ChatroomID: Guid.parse(json.Data)};
+				(real.Data as DeleteChatroom).ChatroomID = Guid.parse(json.Data.ChatroomID);
 				break;
 		}
 	else
@@ -192,6 +200,10 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 			break;
 		case "DeleteChatroom":
 			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
+			break;
+		case "ChangeAccess":
+			js.Data.ChatroomID = (message.Data as ChangeAccess).ChatroomID.toString();
+			js.Data.UserID = (message.Data as ChangeAccess).UserID.toString();
 			break;
 	}
 	return JSON.stringify(js);
