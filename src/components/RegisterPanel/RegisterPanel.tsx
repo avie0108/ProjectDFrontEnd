@@ -1,6 +1,7 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./RegisterPanel.scss";
+import { Server } from "../../Data";
 
 // The state of the register panel
 export interface RegisterPanelState
