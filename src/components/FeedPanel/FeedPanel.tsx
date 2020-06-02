@@ -56,7 +56,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
   getFilterResult(){
     if(this.FilterBarRef.current?.value != ""){
-      var result: Promise<string> = sendGetRequest(`http://localhost/api/feedItem?category=${this.FilterBarRef.current?.value}&limit=7&offset=${this.state.pageNumber}`);
+      var result: Promise<string> = sendGetRequest(`http://${Server}/api/feedItem?category=${this.FilterBarRef.current?.value}&limit=7&offset=${this.state.pageNumber}`);
       result.then((res: string) => {
         if (res) {
           try {

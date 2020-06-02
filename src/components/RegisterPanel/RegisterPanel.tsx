@@ -71,7 +71,7 @@ export class RegisterPanel extends React.Component<{}, RegisterPanelState>
         
         // Send a POST request to create the account
         let xhttp: XMLHttpRequest = new XMLHttpRequest();
-        xhttp.open("POST", "http://localhost/api/account", true);
+        xhttp.open("POST", `http://${Server}/api/account`, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         let json: string = JSON.stringify({
             Email: this.EmailRef.current?.value,
