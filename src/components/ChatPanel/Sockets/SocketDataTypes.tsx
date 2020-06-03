@@ -14,7 +14,7 @@ export interface SocketJsonMessage
 export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage" | "ChangeAccess";
 // the types that data can be in a socket message
 export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory
-| CreateChatroom | DeleteChatroom | ChangeAccess | Array<ChatMessageMessage>;
+| CreateChatroom | DeleteChatroom | ChangeAccess | EditChatroom | Array<ChatMessageMessage>;
 
 // the message that the backend sends to update chat info
 export interface ChatInfoMessage
@@ -55,6 +55,14 @@ export interface CreateChatroom
 	Private: boolean;
 }
 
+// the message that will be used to edit chatrooms
+export interface EditChatroom{
+	ChatroomID: Guid;
+	Name: string | undefined;
+	Private: boolean | undefined;
+}
+
+// the message that will be used to change access of users
 export interface ChangeAccess
 {
 	ChatroomID: Guid;
@@ -62,6 +70,7 @@ export interface ChangeAccess
 	AllowAccess: boolean;
 }
 
+// the message that will be used to delete chatrooms
 export interface DeleteChatroom
 {
 	ChatroomID: Guid;
@@ -85,6 +94,13 @@ export interface User
 	PermissionLevel: number;
 	Status?: UserStatus;
 };
+
+// basic permission levels
+export enum PermissionLevels
+{
+	User = 0,
+	Admin = 1,
+}
 
 // the status a user can have
 export enum UserStatus
@@ -205,6 +221,8 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 			js.Data.ChatroomID = (message.Data as ChangeAccess).ChatroomID.toString();
 			js.Data.UserID = (message.Data as ChangeAccess).UserID.toString();
 			break;
+		case "EditChatroom":
+			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
 	}
 	return JSON.stringify(js);
 }

@@ -63,8 +63,10 @@ interface ChatState
 // the chat to be rendered
 class Chat extends React.Component<ChatProps, ChatState>
 {
+	// handle when a message is recieved
 	messageCallBack: (sock: WebSocket, ev: MessageEvent) => any;
 
+	// the last message
 	messagesEnd: HTMLDivElement | null;
 
 	constructor(props: Readonly<ChatProps>)
@@ -92,11 +94,13 @@ class Chat extends React.Component<ChatProps, ChatState>
 			this.state = {Messages: messages};
 	}
 
+	// update this component
 	componentWillReceiveProps(props : Readonly<ChatProps>)
 	{
 		this.setMessages(props.ChatId);
 	}
 
+	// set the message of this chatroom in the state
 	setMessages(ID: Guid)
 	{
 		let messages = Data.getMessages(ID);
@@ -118,10 +122,12 @@ class Chat extends React.Component<ChatProps, ChatState>
 			this.setState({Messages: messages});
 	}
 
+	// remove the callback
 	componentWillUnmount(){
 		Sockets.RemoveOnMessageCallBack(this.messageCallBack);
 	}
 
+	// scroll downwards
 	componentDidMount()
 	{
 		if(this.messagesEnd === null)
