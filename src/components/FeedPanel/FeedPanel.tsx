@@ -55,6 +55,9 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
   }
 
   getFilterResult(){
+    this.SeachBarRef.current!.InputRef.current!.value = "";
+    document.getElementById("search-term-label")!.style.display = "none";
+
     if(this.FilterBarRef.current?.value != ""){
       var result: Promise<string> = sendGetRequest(`http://${Server}/api/feedItem?category=${this.FilterBarRef.current?.value}&limit=7&offset=${this.state.pageNumber}`);
       result.then((res: string) => {
@@ -67,14 +70,37 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
               feedItems.push(fItem);
             });
             this.setState({ feedItems: feedItems });
+            this.setFilter(this.getDutchCategoryName(this.FilterBarRef.current!.value));
           } catch {}
       }
     })
   }
 }
 
+  setFilter(filter: string) {
+    if (!filter) {
+      document.getElementById("filter-label")!.style.display = "none";
+      return;
+    } else {
+      document.getElementById("filter-label")!.style.display = "block";
+    }
+
+    document.getElementById("filter-choice")!.innerText = filter;
+  }
+
+  resetFilter() {
+    this.getFeedItems(7, this.state.pageNumber, "");
+
+    this.FilterBarRef.current!.selectedIndex = 0;
+
+    document.getElementById("filter-label")!.style.display = "none";
+  }
+
   // Gets the results of the get request and puts them into the state to be rendered out on the screen
   getFeedItems(limit: number, offset: number, searchString: any) {
+    this.FilterBarRef.current!.selectedIndex = 0;
+    document.getElementById("filter-label")!.style.display = "none";
+
     // If the searchString has no value, assign the empty string.
     searchString = !searchString ? "" : searchString;
 
@@ -123,6 +149,20 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
 
   }
 
+  // gets this items category in dutch
+  getDutchCategoryName(category: string) {
+    switch (category) {
+      case "General":
+        return "Algemeen";
+      case "Personal":
+        return "Persoonlijk";
+      case "Note":
+        return "Opmerking";
+      default:
+        return "";
+    }
+  }
+
   // sets the interval for getting feed items
   componentDidMount(){
     this.getFeedItems(7, this.state.pageNumber, "");
@@ -144,13 +184,17 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           </button>
           
           <SearchBar ref={this.SeachBarRef} action= {()=>{this.getFeedItems(7, this.state.pageNumber, this.SeachBarRef.current?.InputRef.current?.value);}}/>
-          <select id="category" className="form-element" required ref={this.FilterBarRef}>
-            <option value="" selected disabled>Filter op categorie</option>
+          <select id="category-filter" className="form-element" required ref={this.FilterBarRef} onChange={() => {this.getFilterResult()}}>
+            <option value="" selected disabled>Filter feed items...</option>
             <option value="General">Algemeen</option>
             <option value="Personal">Persoonlijk</option>
             <option value="Note">Opmerking</option>
           </select>
-          <button className="search-submit" onClick={() => {this.getFilterResult()}}>Zoeken</button>
+          <div id="filter-label">
+            Feed items met categorie <span id="filter-choice"></span>
+            <span title="Filter resetten" id="filter-reset" onClick={() => this.resetFilter()}>Reset ❌</span>
+          </div>
+
           <div id="search-term-label">
             Feed items met term <span id="search-term"></span>
             <span title="Zoekterm resetten" id="search-term-reset" onClick={() => this.resetSearch()}>Reset ❌</span>

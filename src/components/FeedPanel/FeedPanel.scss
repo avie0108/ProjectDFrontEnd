@@ -92,7 +92,17 @@
         }
     }
 
-    #search-term-label {
+    #category-filter {
+        height: 42px;
+        background-color: #F1F1F1;
+        float: right;
+        margin-right: 10px;
+        font-family: "Open Sans";
+        padding: 10px;
+    }
+
+    #search-term-label,
+    #filter-label {
         margin-top: 10px;
         margin-left: 5px;
         font-size: 14px;
@@ -102,7 +112,8 @@
             font-style: italic;
         }
 
-        #search-term-reset {
+        #search-term-reset,
+        #filter-reset {
             border: 2px solid #ACACAC;
             border-radius: 7px;
             background-color: #ACACAC;
