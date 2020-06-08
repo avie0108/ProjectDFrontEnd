@@ -103,4 +103,4 @@ export function getMessages(chatroomID: Guid) { return Messages.get(chatroomID);
 //#endregion
 
 // the server name
-export let Server: string = "192.168.1.105"
+export let Server: string = "localhost"

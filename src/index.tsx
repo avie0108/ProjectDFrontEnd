@@ -11,7 +11,6 @@ import { AdminPanel } from "./components/AdminPanel/AdminPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
 import * as Data from "./Data";
 import * as Settings from "./components/Settings/Settings";
-import { StatusBar } from "./components/StatusBar/StatusBar";
 
 interface AppState
 {
@@ -26,14 +25,12 @@ interface AppState
 // The app
 class App extends React.Component<{},AppState>
 {
-	StatusBar: React.RefObject<StatusBar>;
 	SettingsRef: React.RefObject<SettingsPanel>;
 	AdminRef: React.RefObject<AdminPanel>;
 
 	constructor(props: object)
 	{
 		super(props);
-		this.StatusBar = React.createRef<StatusBar>();
 		this.SettingsRef = React.createRef<SettingsPanel>();
 		this.AdminRef = React.createRef<AdminPanel>();
 		Settings.AddOnSettingChangedCallBack((s, v) => this.onSettingChanged(s, v))
@@ -43,8 +40,6 @@ class App extends React.Component<{},AppState>
 	render()
 	{
 		return <div data-theme={this.state.Theme}>
-			<StatusBar LogedIn={() => this.onLogedIn()} ref={this.StatusBar}/>
-
 			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
 			<LoginPanel LogedIn={() => this.onLogedIn()}/>
 			<SettingsPanel ref={this.SettingsRef}/>
@@ -55,16 +50,29 @@ class App extends React.Component<{},AppState>
 	}
 
 	// handle what happens when a button in the side panel is clicked
-	SidePanelCallBack(id: Guid | "Feed" | "Settings" | "Admin", name?: string)
+	SidePanelCallBack(id: Guid | "Feed" | "Settings" | "Admin" | "LogOut", name?: string)
 	{
-		if(id !== "Settings" && id !== "Admin")
+		if(id !== "Settings" && id !== "Admin" && id !== "LogOut")
 			this.setState({CurrentPanel: { ID: id, Name: name }});
 		else if(id === "Settings")
 			this.SettingsRef.current?.Show();
-		else 
+		else if(id === "Admin")
 			this.AdminRef.current?.Show();
+		else
+			this.LogOutCurrentUser();
 	}
 	
+	LogOutCurrentUser()
+	{
+		let xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("DELETE", `http://${Data.Server}/api/login`, true);
+		xhttp.onloadend = () => {
+			window.location.reload(true);
+		}
+		xhttp.withCredentials = true;
+		xhttp.send();
+	}
+
 	/*
 	* Decides wether it should render feed or a chat.
 	* This is decided based on the CurrentPanel in the state.

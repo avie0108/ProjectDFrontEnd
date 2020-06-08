@@ -47,9 +47,8 @@
 .feed-panel {
     color: white;
     box-sizing: border-box;
-	background-color: hsl($basehue,$basesaturation, percentage(($baselighgting * 2) / 255));
     display: flex;
-    height: 92vh;
+    height: 100vh;
     padding-left: $sidepanelsize;
     padding-right: 10px;
     font-family: $basefont;
