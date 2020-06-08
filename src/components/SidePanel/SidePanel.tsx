@@ -1,9 +1,8 @@
 import * as React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faCog, faUser, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faCog, faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Guid } from "guid-typescript";
 import "./SidePanel.scss";
-import { loggedInUser } from "../../AccountUtils";
 import * as Data from "../../Data";
 
 export interface SidePanelProps

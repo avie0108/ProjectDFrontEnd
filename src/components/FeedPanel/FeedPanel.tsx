@@ -5,6 +5,8 @@ import { sendAsJSON, sendGetRequest } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { SearchBar } from "./SearchBar";
 import { Server } from "../../Data";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 
 export interface FeedPanelState {
@@ -58,7 +60,7 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
     this.SeachBarRef.current!.InputRef.current!.value = "";
     document.getElementById("search-term-label")!.style.display = "none";
 
-    if(this.FilterBarRef.current?.value != ""){
+    if(this.FilterBarRef.current?.value !== ""){
       var result: Promise<string> = sendGetRequest(`http://${Server}/api/feedItem?category=${this.FilterBarRef.current?.value}&limit=7&offset=${this.state.pageNumber}`);
       result.then((res: string) => {
         if (res) {
@@ -192,12 +194,12 @@ export class FeedPanel extends React.Component<{}, FeedPanelState> {
           </select>
           <div id="filter-label">
             Feed items met categorie <span id="filter-choice"></span>
-            <span title="Filter resetten" id="filter-reset" onClick={() => this.resetFilter()}>Reset ❌</span>
+            <span title="Filter resetten" id="filter-reset" onClick={() => this.resetFilter()}>Reset <FontAwesomeIcon icon={faTimes}/></span>
           </div>
 
           <div id="search-term-label">
             Feed items met term <span id="search-term"></span>
-            <span title="Zoekterm resetten" id="search-term-reset" onClick={() => this.resetSearch()}>Reset ❌</span>
+            <span title="Zoekterm resetten" id="search-term-reset" onClick={() => this.resetSearch()}>Reset <FontAwesomeIcon icon={faTimes}/></span>
           </div>
           <ul>
             {this.state.feedItems.map((tag: FeedItem) => (

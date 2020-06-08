@@ -156,7 +156,7 @@ export class NewUserPanel extends React.Component<NewPanelProps, RegisterPanelSt
 			{
 				
 				let nhttp: XMLHttpRequest = new XMLHttpRequest();
-				nhttp.open("get", `http://${Server}/api/account?email=${email}`, true);
+				nhttp.open("get", `http://${Server}/api/account?Email=${email}`, true);
 				
 				nhttp.withCredentials = true;
 				

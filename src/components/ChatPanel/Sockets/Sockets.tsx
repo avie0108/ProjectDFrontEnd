@@ -54,6 +54,13 @@ export async function Send(message: SocketJsonMessage)
 	Socket.send(m);
 }
 
+export function Reset()
+{
+	if(Initialized)
+		Terminate();
+	OnMessageCallBacks = Array<(sock: WebSocket, ev: MessageEvent) => any>();
+}
+
 // closes the socket and makes it ready to be reinitialized
 export async function Terminate()
 {

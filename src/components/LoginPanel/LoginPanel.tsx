@@ -1,7 +1,6 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
-import { logOut, updateLoggedInUser } from "../../AccountUtils";
 import { Server } from "../../Data";
 
 export interface LoginPanelProps{
@@ -95,8 +94,6 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 			this.setState({ErrorMessage: "U dient een wachtwoord in te vullen."});
 			return;
 		}
-		
-		logOut();
 
 		if(!this.Sending)
 		{

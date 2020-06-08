@@ -6,7 +6,7 @@ import { Message } from "./components/ChatPanel/ChatPanel";
 // the known users
 let Users: Array<User> = new Array<User>();
 // the currently logged in user
-let CurrentUser: User;
+let CurrentUser: User | undefined;
 
 // sets the known users
 export function setUsers(users: Array<User>) { Users = users; }
@@ -104,3 +104,14 @@ export function getMessages(chatroomID: Guid) { return Messages.get(chatroomID);
 
 // the server name
 export let Server: string = "localhost"
+
+// resets all the data in this module
+export function resetData()
+{
+	Users = new Array<User>();
+	CurrentUser = undefined;
+	
+	Chatrooms = new Array<Chatroom>();
+	LastMessage = new Map<Guid, number>();
+	Messages = new Map<Guid, Array<Message>>();
+}

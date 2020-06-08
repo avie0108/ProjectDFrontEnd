@@ -6,6 +6,7 @@ import { PopUp } from "../Pop-up/Pop-up";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { loggedInUser } from '../../AccountUtils';
 import { Server } from '../../Data';
+import * as Data from '../../Data';
 
 export interface FeedItemProps {
   // ID of the feed item
@@ -27,7 +28,6 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
   TextRef: React.RefObject<HTMLTextAreaElement>;
   CategoryRef: React.RefObject<HTMLSelectElement>;
   EditPopupRef: React.RefObject<PopUp>;
-  Email: string;
 
   constructor(props: FeedItemProps) {
     super(props);
@@ -39,8 +39,6 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
 
     // The edit pop up
     this.EditPopupRef = React.createRef<PopUp>();
-
-    this.Email = loggedInUser["Email"];
   }
 
   // Shows the edit pop up
@@ -92,7 +90,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
   render() {
     return (
       <div className="feed-item">
-        {this.Email === this.props.UserEmail || loggedInUser?.["PermissionLevel"] === 1 ? (
+        {loggedInUser["Email"] === this.props.UserEmail || Data.getCurrentUser()?.PermissionLevel === 1 ? (
         <div className="feed-item-options">
             <div>{this.props.UserEmail}</div>
             <div>&nbsp;</div>

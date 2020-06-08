@@ -11,6 +11,8 @@ import { AdminPanel } from "./components/AdminPanel/AdminPanel";
 import * as Socket from "./components/ChatPanel/Sockets/Sockets";
 import * as Data from "./Data";
 import * as Settings from "./components/Settings/Settings";
+import { updateLoggedInUser } from "./AccountUtils";
+import { FeedItem } from "./components/FeedPanel/FeedItem";
 
 interface AppState
 {
@@ -27,12 +29,16 @@ class App extends React.Component<{},AppState>
 {
 	SettingsRef: React.RefObject<SettingsPanel>;
 	AdminRef: React.RefObject<AdminPanel>;
+	FeedRef: React.RefObject<FeedPanel>;
+	LoginRef: React.RefObject<LoginPanel>;
 
 	constructor(props: object)
 	{
 		super(props);
 		this.SettingsRef = React.createRef<SettingsPanel>();
 		this.AdminRef = React.createRef<AdminPanel>();
+		this.FeedRef = React.createRef<FeedPanel>();
+		this.LoginRef = React.createRef<LoginPanel>();
 		Settings.AddOnSettingChangedCallBack((s, v) => this.onSettingChanged(s, v))
 		this.state = {CurrentPanel: { ID: "Feed" }, SidePanelChats: Array<{ID: Guid, Name: string}>(), Theme: Settings.GetSetting("Theme")};
 	}
@@ -41,7 +47,7 @@ class App extends React.Component<{},AppState>
 	{
 		return <div data-theme={this.state.Theme}>
 			<SidePanel CallBack={(guid, name) => this.SidePanelCallBack(guid, name)} Chats={this.state.SidePanelChats}/>
-			<LoginPanel LogedIn={() => this.onLogedIn()}/>
+			<LoginPanel LogedIn={() => this.onLogedIn()} ref={this.LoginRef}/>
 			<SettingsPanel ref={this.SettingsRef}/>
 			{Data.getCurrentUser()?.PermissionLevel ? <AdminPanel ref={this.AdminRef}/> : null }
 			{/* Decides wether it should render feed or a chat. */}
@@ -67,7 +73,14 @@ class App extends React.Component<{},AppState>
 		let xhttp: XMLHttpRequest = new XMLHttpRequest();
 		xhttp.open("DELETE", `http://${Data.Server}/api/login`, true);
 		xhttp.onloadend = () => {
-			window.location.reload(true);
+			if(xhttp.status === 200)
+			{
+				Data.resetData();
+				this.FeedRef.current?.setState({...this.FeedRef.current.state, feedItems: new Array<FeedItem>(), pageNumber: 0 });
+				this.setState({...this.state, CurrentPanel: { ID: "Feed" }, SidePanelChats: Array<{ID: Guid, Name: string}>()});
+				this.LoginRef.current?.Show();
+				Socket.Reset();
+			}
 		}
 		xhttp.withCredentials = true;
 		xhttp.send();
@@ -81,12 +94,14 @@ class App extends React.Component<{},AppState>
 	ChoosePanel()
 	{
 		if(this.state.CurrentPanel.ID === "Feed")
-			return <FeedPanel/>
+			return <FeedPanel ref={this.FeedRef}/>
 		return <ChatPanel ChatId = {this.state.CurrentPanel.ID as Guid} Name={this.state.CurrentPanel.Name ?? ""}/>
 	}
 
 	// create a websocket connection when logging in
 	onLogedIn(){
+		updateLoggedInUser();
+		this.FeedRef.current?.resetFilter();
 		Socket.AddOnMessageCallBack((soc, ev) => this.onSocketMessage(soc, ev));
 		Socket.Init();
 	}
