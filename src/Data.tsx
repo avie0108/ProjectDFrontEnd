@@ -34,6 +34,16 @@ export function removeUser(user: Guid)
 		Users.splice(i, 1);
 }
 
+// updates this user
+export function updateUser(user: User)
+{
+	let i = Users.findIndex(x => x.ID.equals(user.ID));
+	if(i > -1)
+		Users[i] = user;
+	else
+	Users.push(user);
+}
+
 //#endregion
 
 //#region Chat
@@ -57,6 +67,7 @@ export function getChatrooms() { return Chatrooms; }
 // gets the known chatroom's
 export function getChatroom(ID: Guid) { return Chatrooms.find(x=> x.ID.equals(ID)); }
 
+// updates the specified chatroom
 export function updateChatroom(chatroom: Chatroom)
 {
 	console.log(Chatrooms);

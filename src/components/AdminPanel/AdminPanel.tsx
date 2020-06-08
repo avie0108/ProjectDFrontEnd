@@ -10,7 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 interface AdminPanelState{
+	// the ID of the current chatroom
 	DetailChatroom: Guid;
+	// the ID of the current user
 	DetailUser: Guid;
 }
 
@@ -76,7 +78,9 @@ export class AdminPanel extends React.Component<{}, AdminPanelState>
 }
 
 interface ChatroomItemProps{
+	// the chatroom this item represents
 	Chatroom: Chatroom
+	// what happens when the edit icon is pressed
 	OnEdit(Chatroom: Chatroom): void
 }
 
@@ -91,7 +95,9 @@ class ChatroomItem extends React.Component<ChatroomItemProps,{}>{
 }
 
 interface UserItemProps{
+	// the user this item represents
 	User: User
+	// what happens when the user icon is pressed
 	OnEdit(User: User): void
 }
 

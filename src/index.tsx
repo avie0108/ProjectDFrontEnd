@@ -107,6 +107,7 @@ class App extends React.Component<{},AppState>
 		}
 	}
 
+	// handle when a Chatroom Created websocket is received
 	onChatroomCreated(data: Socket.Chatroom)
 	{
 		Data.addChatroom(data);
@@ -116,12 +117,13 @@ class App extends React.Component<{},AppState>
 		this.forceUpdate();
 	}
 
+	// handle when a Chatroom Updated websocket is received
 	onChatroomUpdated(data: Socket.Chatroom)
 	{
 		if(Data.getChatrooms().findIndex(x => x.ID.equals(data.ID)) > -1)
 		{
 			Data.updateChatroom(data);
-
+			
 			let i = this.state.SidePanelChats.findIndex(x=> x.ID.equals(data.ID));
 			console.log(i);
 			if(i > -1)
@@ -130,13 +132,14 @@ class App extends React.Component<{},AppState>
 				this.state.SidePanelChats[i].Name = data.Name;
 				this.forceUpdate();
 			}
-
+			
 			this.AdminRef.current?.forceUpdate();
 		}	
 		else
 			this.onChatroomCreated(data);
 	}
 
+	// handle when a Chatroom deleted websocket is received
 	onChatroomDeleted(data: Socket.DeleteChatroom)
 	{
 		Data.deleteChatroom(data.ChatroomID);

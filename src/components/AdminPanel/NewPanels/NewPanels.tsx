@@ -7,6 +7,7 @@ import "./NewPanels.scss";
 import { Server } from "../../../Data";
 
 export interface NewPanelProps{
+	// what happens when this panel closes
 	onClose(): void;
 }
 
@@ -40,6 +41,7 @@ export class NewChatroomPanel extends React.Component<NewPanelProps, {}>
 		</PopUp>
 	}
 
+	// creates the new chatroom
 	CreateChatroom(){
 		if(this.NameRef.current?.value === "" || this.NameRef.current?.value === undefined)
 			return;
@@ -110,6 +112,8 @@ export class NewUserPanel extends React.Component<NewPanelProps, RegisterPanelSt
 		</PopUp>
 	}
 
+	
+	// registers this user
 	registerUser() {
 		// Reset the state
 		this.setState({SuccessMessage: null, ErrorMessage: null});
@@ -172,12 +176,6 @@ export class NewUserPanel extends React.Component<NewPanelProps, RegisterPanelSt
 
 		// Send the json
 		xhttp.send(json);
-	}
-
-	resetFields() {
-		if (this.EmailRef.current) this.EmailRef.current.value = "";
-		if (this.PasswordRef.current) this.PasswordRef.current.value = "";
-		if (this.RepeatPasswordRef.current) this.RepeatPasswordRef.current.value = "";
 	}
 
 	Show(){
