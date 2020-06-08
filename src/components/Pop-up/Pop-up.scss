@@ -37,7 +37,7 @@
 	background-color: rgba($color: #000000, $alpha: ((255 - $baselighgting * 3) / 255));
 	height: 100vh;
 	width: 100vw;
-	position: absolute;
+	position: fixed;
 	left: 0;
 	top: 0;
 }

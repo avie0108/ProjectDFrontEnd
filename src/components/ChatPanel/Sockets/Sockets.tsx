@@ -1,4 +1,5 @@
 import { SocketJsonMessage, CreateJSONMessage} from "./SocketDataTypes";
+import { Server } from "../../../Data";
 
 // the websocket used for communication
 let Socket: WebSocket;
@@ -14,11 +15,11 @@ export async function Init()
 {
 	if(!Initialized)
 	{
-		Socket = new WebSocket("ws://localhost/chat");
+		Socket = new WebSocket(`ws://${Server}/chat`);
 		Initialized = true;
 		Socket.onclose = () => Initialized = false;
 		Socket.onmessage = OnMessage;
-		AddOnMessageCallBack((s, ev) => console.log(ev.data));
+		Socket.onerror = () => {Terminate(); Init();};
 	}
 }
 
@@ -39,6 +40,7 @@ export function RemoveOnMessageCallBack(callBack: ((sock: WebSocket, ev: Message
 // calls all the functions connected with this event
 function OnMessage(this: WebSocket, ev: MessageEvent): any
 {
+	console.log(ev.data);
 	OnMessageCallBacks.forEach(value =>{
 		value(this, ev);
 	});
@@ -50,6 +52,13 @@ export async function Send(message: SocketJsonMessage)
 	let m: string = CreateJSONMessage(message);
 	console.log(m);
 	Socket.send(m);
+}
+
+export function Reset()
+{
+	if(Initialized)
+		Terminate();
+	OnMessageCallBacks = Array<(sock: WebSocket, ev: MessageEvent) => any>();
 }
 
 // closes the socket and makes it ready to be reinitialized

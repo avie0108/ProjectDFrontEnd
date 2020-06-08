@@ -11,9 +11,10 @@ export interface SocketJsonMessage
 };
 
 // the commands available to us
-export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage";
+export type ChatCommand = "ChangeUserStatus" | "ChatHistory" | "CreateChatroom" | "DeleteChatroom" | "EditChatroom" | "ChatMessage" | "ChangeAccess";
 // the types that data can be in a socket message
-export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory | Array<ChatMessageMessage>;
+export type ChatData = ChatInfoMessage | ChatMessageMessage | SentChatMessageMessage | User | SentChatHistory
+| CreateChatroom | DeleteChatroom | ChangeAccess | EditChatroom | Array<ChatMessageMessage>;
 
 // the message that the backend sends to update chat info
 export interface ChatInfoMessage
@@ -47,11 +48,39 @@ export interface ChatMessageMessage
 	Text: string;
 };
 
+// the message that will be used to create a new chatroom
+export interface CreateChatroom
+{
+	Name: string;
+	Private: boolean;
+}
+
+// the message that will be used to edit chatrooms
+export interface EditChatroom{
+	ChatroomID: Guid;
+	Name: string | undefined;
+	Private: boolean | undefined;
+}
+
+// the message that will be used to change access of users
+export interface ChangeAccess
+{
+	ChatroomID: Guid;
+	UserID: Guid;
+	AllowAccess: boolean;
+}
+
+// the message that will be used to delete chatrooms
+export interface DeleteChatroom
+{
+	ChatroomID: Guid;
+}
+
 // a basic chatroom
 export interface Chatroom
 {
 	Name: string;
-	Private: false;
+	Private: boolean;
 	ID: Guid;
 	LastMessage: number | null;
 	Users: Array<Guid>;
@@ -65,6 +94,13 @@ export interface User
 	PermissionLevel: number;
 	Status?: UserStatus;
 };
+
+// basic permission levels
+export enum PermissionLevels
+{
+	User = 0,
+	Admin = 1,
+}
 
 // the status a user can have
 export enum UserStatus
@@ -140,6 +176,17 @@ export function GetJSONMessage(message: string): SocketJsonMessage
 				(real.Data as ChatMessageMessage).User = Guid.parse(json.Data.User);
 				(real.Data as ChatMessageMessage).Chatroom = Guid.parse(json.Data.Chatroom);
 				(real.Data as ChatMessageMessage).Date = new Date(json.Data.Date);
+				break;
+			case MessageType.ChatroomUpdated:
+			case MessageType.ChatroomCreated:
+				(real.Data as Chatroom).ID = Guid.parse(json.Data.ID);
+				let nUsers =  Array<Guid>();
+				(json.Data.Users as Array<string>).forEach(v => nUsers.push(Guid.parse(v)));
+				(real.Data as Chatroom).Users = nUsers;
+				break;
+			case MessageType.ChatroomDeleted:
+				(real.Data as DeleteChatroom).ChatroomID = Guid.parse(json.Data.ChatroomID);
+				break;
 		}
 	else
 		switch(real.Command)
@@ -166,7 +213,16 @@ export function CreateJSONMessage(message: SocketJsonMessage): string
 			break;
 		case "ChatHistory":
 			js.Data.ChatroomID = (message.Data as SentChatHistory).ChatroomID.toString();
-
+			break;
+		case "DeleteChatroom":
+			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
+			break;
+		case "ChangeAccess":
+			js.Data.ChatroomID = (message.Data as ChangeAccess).ChatroomID.toString();
+			js.Data.UserID = (message.Data as ChangeAccess).UserID.toString();
+			break;
+		case "EditChatroom":
+			js.Data.ChatroomID = (message.Data as DeleteChatroom).ChatroomID.toString();
 	}
 	return JSON.stringify(js);
 }

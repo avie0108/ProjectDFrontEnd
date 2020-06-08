@@ -4,8 +4,9 @@ export function sendAsJSON(object: {}, method: string, endpoint: string) {
 	xhttp.open(method, endpoint, true);
 	xhttp.setRequestHeader("Content-type", "application/json");
 
+	xhttp.withCredentials = true;
+
 	var json: string = JSON.stringify(object);
-	console.log(json);
 	xhttp.send(json);
 	xhttp.onreadystatechange = function () {
 		if (this.status === 0 || (this.status >= 200 && this.status < 400)) {
@@ -19,6 +20,10 @@ export function sendGetRequest(endpoint: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		var xhttp: XMLHttpRequest = new XMLHttpRequest();
 		xhttp.open("GET", endpoint, true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		
+		xhttp.withCredentials = true;
+		
 		let result: string = "";
 		xhttp.onloadend = function () {
 			result = this.responseText;

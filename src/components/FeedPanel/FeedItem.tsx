@@ -4,6 +4,9 @@ import './FeedItem.scss';
 import { sendAsJSON } from "../../ajax";
 import { PopUp } from "../Pop-up/Pop-up";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { loggedInUser } from '../../AccountUtils';
+import { Server } from '../../Data';
+import * as Data from '../../Data';
 
 export interface FeedItemProps {
   // ID of the feed item
@@ -14,6 +17,8 @@ export interface FeedItemProps {
   Description: string;
   // Category of the feed item
   Category: string;
+  // The user of the user who sent the feed item
+  UserEmail: string;
 }
 
 // Feed items are posts a user can make
@@ -57,7 +62,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
         newCategory: this.CategoryRef.current?.value
       },
       "PATCH",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      `http://${Server}/api/feedItem?id=` + this.props.ID
     );
   }
 
@@ -66,7 +71,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
     sendAsJSON(
       {},
       "DELETE",
-      "http://192.168.2.15:12002/api/feedItem?id=" + this.props.ID
+      `http://${Server}/api/feedItem?id=` + this.props.ID
     );
   }
 
@@ -78,18 +83,23 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
       case "Personal":
         return "Persoonlijk";
       case "Note":
-        return "Notule";
+        return "Opmerking";
     }
   }
 
   render() {
     return (
       <div className="feed-item">
+        {loggedInUser["Email"] === this.props.UserEmail || Data.getCurrentUser()?.PermissionLevel === 1 ? (
         <div className="feed-item-options">
-          <div onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
-          <div>&nbsp;</div>
-          <div onClick={() => this.showDeletePopup()}><FontAwesomeIcon icon={faTrashAlt} /></div>
+            <div>{this.props.UserEmail}</div>
+            <div>&nbsp;</div>
+            <div onClick={() => this.showEditPopup()}><FontAwesomeIcon icon={faEdit} /></div>
+            <div>&nbsp;</div>
+            <div onClick={() => this.showDeletePopup()}><FontAwesomeIcon icon={faTrashAlt} /></div>
         </div>
+        ) : (<div className="feed-item-options"><div>{this.props.UserEmail}</div></div>)
+        }
         <div className="feed-item-text-container">
           <div className="feed-item-title">{this.props.Title}</div>
           <div className="feed-item-description">{this.props.Description}</div>
@@ -108,7 +118,7 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
                 <option value="" selected disabled>Kies een nieuwe categorie...</option>
                 <option value="General">Algemeen</option>
                 <option value="Personal">Persoonlijk</option>
-                <option value="Note">Notule</option>
+                <option value="Note">Opmerking</option>
               </select>
               <input type="submit" value="Wijzigen" className="feed-button" />
             </form>

@@ -1,0 +1,86 @@
+@import "../BasicValues.scss";
+
+[data-theme="dark"]{
+	.admin-div{
+		.chatroom-div, .user-div{
+			.chatrooms, .users{
+				background-color: $darkBG3;
+				.chatroom, .user{
+					background-color: $darkBG4;
+				}
+			}
+			button{
+				background-color: $darkBG3;
+				color: $darkColor;
+			}
+		}
+	}
+}
+
+[data-theme="light"]{
+	.admin-div{
+		.chatroom-div, .user-div{
+			.chatrooms, .users{
+				background-color: $lightBG2;
+				.chatroom, .user{
+					background-color: $lightBG3;
+				}
+			}
+		}
+	}
+}
+
+.admin-div{
+	width: calc(100vw - #{$basesize * 2});
+	height: calc(100vh - #{$basesize * 2});
+
+	.chatroom-div, .user-div{
+		height: 45%;
+		.chatrooms, .users{
+			width: calc(100% - 40px);
+			border: 1px solid $darkBG5;
+			height: calc(100% - 100px);
+			border-radius: 10px;
+			padding: 10px;
+			overflow: auto;
+			.chatroom, .user{
+				width: calc(100% - 20px);
+				border: 1px solid $darkBG5;
+				padding: 10px;
+				border-radius: 20px;
+				.header{
+					display: flex;
+					justify-content: space-between;
+					.chatroom-name, .user-name{
+						margin-top: 0px;
+						margin-bottom: 10px;
+					}
+					button{
+						margin: 0;
+						width: auto;
+						height: auto;
+						border: none;
+						background: none;
+						padding: 0;
+						outline: none;
+					}
+				}
+			}
+			.chatroom:not(:last-child), .user:not(:last-child){
+				margin-bottom: 10px;
+			}
+		}
+	}
+
+	button {
+		border: 1px solid $darkBG;
+		width:  calc(100% - 20px);
+		box-sizing: border-box;
+		border-radius: 15px;
+		padding: 10px;
+		margin: 5px 0px;
+		margin-bottom: 5px;
+		font-size: 1rem;
+		outline: none;
+	}
+}

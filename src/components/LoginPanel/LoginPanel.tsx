@@ -1,6 +1,7 @@
 import React from "react";
 import { PopUp } from "../Pop-up/Pop-up";
 import "./LoginPanel.scss";
+import { Server } from "../../Data";
 
 export interface LoginPanelProps{
 	// what happens when the user is logged in
@@ -36,25 +37,48 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		this.state = {ErrorMessage:null};
 	}
 
-	// show the login pop-up
+	// checks if the session is correct and if so logs in
+	// else it asks the user to login
 	componentDidMount()
 	{
-		this.PopUpRef.current?.Show();
+		let xhttp: XMLHttpRequest = new XMLHttpRequest();
+		xhttp.open("post", `http://${Server}/api/login`, true);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		let json: string = JSON.stringify({});
+			
+		xhttp.withCredentials = true;
+		// handle the response of the request
+		xhttp.onloadend = () => {
+			this.Sending = false;
+			if(xhttp.status === 200 || xhttp.status === 204)
+			{
+				this.props.LogedIn();
+				return;
+			}
+			this.PopUpRef.current?.Show();
+		};
+		// send the request
+		xhttp.send(json);
 	}
 
 	render()
 	{
-		return <PopUp Header="Login" canClose={false} ref={this.PopUpRef}>
+		return <PopUp Header="Inloggen" canClose={false} ref={this.PopUpRef}>
 			<div className="login-div">
 				{this.state.ErrorMessage !== null && <div className="error">{this.state.ErrorMessage}</div>}
-				Email:<br/>
+				E-mailadres:<br/>
 				<input type="email" ref={this.EmailRef}/><br/>
 				Wachtwoord:<br/>
 				<input type="password" ref={this.PasswordRef}/><br/>
-				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">houd mij ingelogd </label>
+				<input type="checkbox" ref={this.RememberMeRef}/> <label className="checkbox-text">Ingelogd blijven</label>
 			</div>
-			<input type="submit" value="login" onClick={()=> this.handleFormSubmit()}/>
+			<input type="submit" value="Inloggen" onClick={()=> this.handleFormSubmit()}/>
 		</PopUp>
+	}
+
+	// show the login pop-up
+	Show(){
+		this.PopUpRef.current?.Show();
 	}
 
 	// sends the data to the backend
@@ -63,19 +87,20 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 		// client side error checking
 		if(!LoginPanel.isEmail(this.EmailRef.current?.value ?? "") && this.EmailRef.current?.value !== "Administrator")
 		{
-			this.setState({ErrorMessage: "incorrect Email"});
+			this.setState({ErrorMessage: "Het e-mailadres is niet geldig."});
 			return;
 		}
 		if(this.PasswordRef.current?.value?.trim() === ""){
-			this.setState({ErrorMessage: "leeg Wachtwoord"});
+			this.setState({ErrorMessage: "U dient een wachtwoord in te vullen."});
 			return;
 		}
+
 		if(!this.Sending)
 		{
 			this.Sending = true;
 			// making the request that will be sent
 			let xhttp: XMLHttpRequest = new XMLHttpRequest();
-			xhttp.open("post", "http://localhost/api/login", true);
+			xhttp.open("post", `http://${Server}/api/login`, true);
 			xhttp.setRequestHeader("Content-type", "application/json");
 			let json: string = JSON.stringify({
 				Email: this.EmailRef.current?.value,
@@ -96,7 +121,7 @@ export class LoginPanel extends React.Component<LoginPanelProps, LoginPanelState
 				}
 				else if(xhttp.status === 401)
 				{
-					this.setState({ErrorMessage: "incorrect wachtwoord"});
+					this.setState({ErrorMessage: "Het ingevulde wachtwoord is niet correct."});
 				}
 				else
 				{

@@ -45,10 +45,12 @@
 }
 
 .feed-panel {
+    color: white;
     box-sizing: border-box;
     display: flex;
     height: 100vh;
     padding-left: $sidepanelsize;
+    padding-right: 10px;
     font-family: $basefont;
 
 
@@ -86,6 +88,37 @@
             width: calc(50% - 15px);
             border-radius: 10px;
             border: 0;
+        }
+    }
+
+    #category-filter {
+        height: 42px;
+        background-color: #F1F1F1;
+        float: right;
+        margin-right: 10px;
+        font-family: "Open Sans";
+        padding: 10px;
+    }
+
+    #search-term-label,
+    #filter-label {
+        margin-top: 10px;
+        margin-left: 5px;
+        font-size: 14px;
+        display: none;
+
+        #search-term {
+            font-style: italic;
+        }
+
+        #search-term-reset,
+        #filter-reset {
+            border: 2px solid #ACACAC;
+            border-radius: 7px;
+            background-color: #ACACAC;
+            margin-left: 15px;
+            padding: 0px 5px;
+            cursor: pointer;
         }
     }
 }
