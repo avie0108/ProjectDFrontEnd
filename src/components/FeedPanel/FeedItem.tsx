@@ -112,9 +112,9 @@ export class FeedItem extends React.Component<FeedItemProps, {}> {
         <PopUp ref={this.EditPopupRef} Header={"Feed item wijzigen"}>
           <div className="feed-form">
             <form onSubmit={() => this.editFeedItem()}>
-              <input type="text" className="form-element" placeholder="Nieuwe titel" id="title" ref={this.InputRef} required></input><br />
-              <textarea className="form-element" placeholder="Type uw nieuwe bericht" id="textfield" ref={this.TextRef} required></textarea><br />
-              <select id="category" className="form-element" ref={this.CategoryRef} required>
+              <input type="text" className="form-element" placeholder="Nieuwe titel" id="title" ref={this.InputRef} required defaultValue={this.props.Title}></input><br />
+              <textarea className="form-element" placeholder="Type uw nieuwe bericht" id="textfield" ref={this.TextRef} required defaultValue={this.props.Description}></textarea><br />
+              <select id="category" className="form-element" ref={this.CategoryRef} required defaultValue={this.props.Category}>
                 <option value="" selected disabled>Kies een nieuwe categorie...</option>
                 <option value="General">Algemeen</option>
                 <option value="Personal">Persoonlijk</option>
